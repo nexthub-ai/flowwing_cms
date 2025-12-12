@@ -14,6 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
+      approvals: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          caption: string | null
+          client_feedback: string | null
+          client_id: string
+          content_request_id: string
+          created_at: string
+          draft_content: string | null
+          draft_url: string | null
+          id: string
+          revision_notes: string | null
+          status: string | null
+          thumbnail_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          caption?: string | null
+          client_feedback?: string | null
+          client_id: string
+          content_request_id: string
+          created_at?: string
+          draft_content?: string | null
+          draft_url?: string | null
+          id?: string
+          revision_notes?: string | null
+          status?: string | null
+          thumbnail_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          caption?: string | null
+          client_feedback?: string | null
+          client_id?: string
+          content_request_id?: string
+          created_at?: string
+          draft_content?: string | null
+          draft_url?: string | null
+          id?: string
+          revision_notes?: string | null
+          status?: string | null
+          thumbnail_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approvals_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approvals_content_request_id_fkey"
+            columns: ["content_request_id"]
+            isOneToOne: false
+            referencedRelation: "content_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audience_profiles: {
         Row: {
           active_platforms: string[] | null
@@ -210,6 +276,123 @@ export type Database = {
           writing_style_notes?: string | null
         }
         Relationships: []
+      }
+      clients: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          email: string | null
+          id: string
+          instagram_url: string | null
+          name: string
+          niche: string | null
+          notes: string | null
+          phone: string | null
+          status: string | null
+          tiktok_url: string | null
+          updated_at: string
+          website: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          instagram_url?: string | null
+          name: string
+          niche?: string | null
+          notes?: string | null
+          phone?: string | null
+          status?: string | null
+          tiktok_url?: string | null
+          updated_at?: string
+          website?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          instagram_url?: string | null
+          name?: string
+          niche?: string | null
+          notes?: string | null
+          phone?: string | null
+          status?: string | null
+          tiktok_url?: string | null
+          updated_at?: string
+          website?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
+      communications_log: {
+        Row: {
+          category: string | null
+          client_id: string
+          content_request_id: string | null
+          created_at: string
+          file_url: string | null
+          id: string
+          message_content: string | null
+          message_type: string | null
+          priority: string | null
+          sender_id: string | null
+          sender_type: string | null
+          sentiment: string | null
+          source: string | null
+          summary: string | null
+        }
+        Insert: {
+          category?: string | null
+          client_id: string
+          content_request_id?: string | null
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          message_content?: string | null
+          message_type?: string | null
+          priority?: string | null
+          sender_id?: string | null
+          sender_type?: string | null
+          sentiment?: string | null
+          source?: string | null
+          summary?: string | null
+        }
+        Update: {
+          category?: string | null
+          client_id?: string
+          content_request_id?: string | null
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          message_content?: string | null
+          message_type?: string | null
+          priority?: string | null
+          sender_id?: string | null
+          sender_type?: string | null
+          sentiment?: string | null
+          source?: string | null
+          summary?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communications_log_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communications_log_content_request_id_fkey"
+            columns: ["content_request_id"]
+            isOneToOne: false
+            referencedRelation: "content_requests"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       competitor_analysis: {
         Row: {
@@ -484,6 +667,62 @@ export type Database = {
         }
         Relationships: []
       }
+      content_requests: {
+        Row: {
+          assigned_to: string | null
+          attachments: string[] | null
+          client_id: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          priority: string | null
+          request_type: string | null
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          attachments?: string[] | null
+          client_id: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          priority?: string | null
+          request_type?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          attachments?: string[] | null
+          client_id?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          priority?: string | null
+          request_type?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_requests_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       knowledge_base: {
         Row: {
           approval_status: string | null
@@ -718,6 +957,77 @@ export type Database = {
         }
         Relationships: []
       }
+      social_audits: {
+        Row: {
+          admin_notes: string | null
+          audience_profile: Json | null
+          brand_voice_analysis: Json | null
+          client_id: string | null
+          content_strategy: Json | null
+          created_at: string
+          created_by: string | null
+          engagement_patterns: Json | null
+          id: string
+          payment_amount: number | null
+          payment_status: string | null
+          recommendations: Json | null
+          sent_at: string | null
+          status: string | null
+          strengths: string[] | null
+          updated_at: string
+          viewed_at: string | null
+          weaknesses: string[] | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          audience_profile?: Json | null
+          brand_voice_analysis?: Json | null
+          client_id?: string | null
+          content_strategy?: Json | null
+          created_at?: string
+          created_by?: string | null
+          engagement_patterns?: Json | null
+          id?: string
+          payment_amount?: number | null
+          payment_status?: string | null
+          recommendations?: Json | null
+          sent_at?: string | null
+          status?: string | null
+          strengths?: string[] | null
+          updated_at?: string
+          viewed_at?: string | null
+          weaknesses?: string[] | null
+        }
+        Update: {
+          admin_notes?: string | null
+          audience_profile?: Json | null
+          brand_voice_analysis?: Json | null
+          client_id?: string | null
+          content_strategy?: Json | null
+          created_at?: string
+          created_by?: string | null
+          engagement_patterns?: Json | null
+          id?: string
+          payment_amount?: number | null
+          payment_status?: string | null
+          recommendations?: Json | null
+          sent_at?: string | null
+          status?: string | null
+          strengths?: string[] | null
+          updated_at?: string
+          viewed_at?: string | null
+          weaknesses?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_audits_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       social_trend_analysis: {
         Row: {
           analysis_date: string | null
@@ -894,6 +1204,65 @@ export type Database = {
           username?: string | null
         }
         Relationships: []
+      }
+      weekly_reports: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          kpis: Json | null
+          posts_approved: number | null
+          posts_published: number | null
+          posts_rejected: number | null
+          recommendations: string[] | null
+          report_url: string | null
+          sent_at: string | null
+          summary: string | null
+          updated_at: string
+          week_end: string
+          week_start: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          kpis?: Json | null
+          posts_approved?: number | null
+          posts_published?: number | null
+          posts_rejected?: number | null
+          recommendations?: string[] | null
+          report_url?: string | null
+          sent_at?: string | null
+          summary?: string | null
+          updated_at?: string
+          week_end: string
+          week_start: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          kpis?: Json | null
+          posts_approved?: number | null
+          posts_published?: number | null
+          posts_rejected?: number | null
+          recommendations?: string[] | null
+          report_url?: string | null
+          sent_at?: string | null
+          summary?: string | null
+          updated_at?: string
+          week_end?: string
+          week_start?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "weekly_reports_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       whatsapp_messages: {
         Row: {
