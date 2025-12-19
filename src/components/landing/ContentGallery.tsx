@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Play, Sparkles, Calendar, Users, BarChart3, Zap } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Sparkles, Calendar, Users, BarChart3, Zap } from "lucide-react";
 
 const contentExamples = [
   {
@@ -34,10 +34,65 @@ const contentExamples = [
     handle: "@marcusj",
     quote: "The best CMS for social media teams. Period.",
   },
+  {
+    type: "stats",
+    gradient: "from-pink-500 via-rose-500 to-red-600",
+    title: "50M+",
+    subtitle: "Impressions",
+  },
+  {
+    type: "quote",
+    gradient: "from-blue-600 to-cyan-700",
+    author: "Alex T.",
+    handle: "@alext",
+    quote: "Finally, a tool that understands content creators.",
+  },
 ];
 
+// Duplicate for seamless loop
+const duplicatedContent = [...contentExamples, ...contentExamples];
+
 export function ContentGallery() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+
+    let animationId: number;
+    let scrollPosition = 0;
+    const speed = 0.5;
+
+    const animate = () => {
+      scrollPosition += speed;
+      
+      // Reset position when we've scrolled through first set
+      const halfWidth = scrollContainer.scrollWidth / 2;
+      if (scrollPosition >= halfWidth) {
+        scrollPosition = 0;
+      }
+      
+      scrollContainer.scrollLeft = scrollPosition;
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animationId = requestAnimationFrame(animate);
+
+    // Pause on hover
+    const handleMouseEnter = () => cancelAnimationFrame(animationId);
+    const handleMouseLeave = () => {
+      animationId = requestAnimationFrame(animate);
+    };
+
+    scrollContainer.addEventListener("mouseenter", handleMouseEnter);
+    scrollContainer.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      scrollContainer.removeEventListener("mouseenter", handleMouseEnter);
+      scrollContainer.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
 
   return (
     <section className="relative py-24 overflow-hidden">
@@ -58,17 +113,15 @@ export function ContentGallery() {
           </p>
         </div>
 
-        {/* Content Cards Carousel */}
-        <div className="flex gap-4 overflow-x-auto pb-8 px-4 -mx-4 scrollbar-hide">
-          {contentExamples.map((item, index) => (
+        {/* Auto-scrolling Content Cards */}
+        <div 
+          ref={scrollRef}
+          className="flex gap-4 overflow-x-hidden pb-8"
+        >
+          {duplicatedContent.map((item, index) => (
             <div
               key={index}
-              className={`flex-shrink-0 w-64 h-96 rounded-2xl bg-gradient-to-br ${item.gradient} p-6 flex flex-col justify-end transform transition-all duration-300 cursor-pointer relative overflow-hidden`}
-              style={{
-                transform: hoveredIndex === index ? 'scale(1.05)' : 'scale(1)',
-              }}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
+              className={`flex-shrink-0 w-64 h-96 rounded-2xl bg-gradient-to-br ${item.gradient} p-6 flex flex-col justify-end cursor-pointer relative overflow-hidden hover:scale-105 transition-transform duration-300`}
             >
               {/* Overlay pattern */}
               <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.2),_transparent_70%)]" />
