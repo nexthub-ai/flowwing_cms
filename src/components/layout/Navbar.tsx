@@ -1,11 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Zap, LayoutDashboard, FileText, Users, Settings, LogOut, LogIn } from "lucide-react";
+import { Zap, LayoutDashboard, FileText, Users, Settings, LogOut, LogIn, PenTool } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Content", href: "/content", icon: PenTool },
   { label: "Audits", href: "/audits", icon: FileText },
   { label: "Clients", href: "/clients", icon: Users },
   { label: "Settings", href: "/settings", icon: Settings },
@@ -55,6 +56,13 @@ export function Navbar() {
           )}
 
           <div className="flex items-center gap-3">
+            {!user && (
+              <Link to="/pricing">
+                <Button variant="ghost" size="sm">
+                  Pricing
+                </Button>
+              </Link>
+            )}
             {user ? (
               <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2">
                 <LogOut className="h-4 w-4" />

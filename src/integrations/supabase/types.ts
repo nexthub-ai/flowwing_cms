@@ -14,6 +14,125 @@ export type Database = {
   }
   public: {
     Tables: {
+      content_comments: {
+        Row: {
+          approval_status: string | null
+          content: string
+          created_at: string
+          id: string
+          is_approval: boolean | null
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          approval_status?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          is_approval?: boolean | null
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          approval_status?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          is_approval?: boolean | null
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "content_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_posts: {
+        Row: {
+          client_id: string | null
+          content: string | null
+          created_at: string
+          hashtags: string[] | null
+          id: string
+          media_urls: string[] | null
+          notes: string | null
+          platform: string | null
+          published_at: string | null
+          scheduled_at: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_id?: string | null
+          content?: string | null
+          created_at?: string
+          hashtags?: string[] | null
+          id?: string
+          media_urls?: string[] | null
+          notes?: string | null
+          platform?: string | null
+          published_at?: string | null
+          scheduled_at?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string | null
+          content?: string | null
+          created_at?: string
+          hashtags?: string[] | null
+          id?: string
+          media_urls?: string[] | null
+          notes?: string | null
+          platform?: string | null
+          published_at?: string | null
+          scheduled_at?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      content_templates: {
+        Row: {
+          category: string | null
+          content_template: string
+          created_at: string
+          id: string
+          name: string
+          platform: string | null
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          content_template: string
+          created_at?: string
+          id?: string
+          name: string
+          platform?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          content_template?: string
+          created_at?: string
+          id?: string
+          name?: string
+          platform?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
