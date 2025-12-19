@@ -12,6 +12,8 @@ import Audit from "./pages/Audit";
 import Audits from "./pages/Audits";
 import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
+import Content from "./pages/Content";
+import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,11 +28,20 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route
               path="/dashboard"
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/content"
+              element={
+                <ProtectedRoute>
+                  <Content />
                 </ProtectedRoute>
               }
             />

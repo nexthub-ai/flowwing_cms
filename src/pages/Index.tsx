@@ -1,23 +1,10 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/landing/Hero";
+import { ContentGallery } from "@/components/landing/ContentGallery";
 import { Features } from "@/components/landing/Features";
-import { Testimonials } from "@/components/landing/Testimonials";
+import { TestimonialsEnhanced } from "@/components/landing/TestimonialsEnhanced";
+import { PricingSection } from "@/components/landing/PricingSection";
 import { AuditForm } from "@/components/landing/AuditForm";
-import { forwardRef } from "react";
-
-const FeaturesSection = forwardRef<HTMLElement>((props, ref) => (
-  <section ref={ref}>
-    <Features />
-  </section>
-));
-FeaturesSection.displayName = "FeaturesSection";
-
-const AuditFormSection = forwardRef<HTMLElement>((props, ref) => (
-  <section ref={ref}>
-    <AuditForm />
-  </section>
-));
-AuditFormSection.displayName = "AuditFormSection";
 
 const Index = () => {
   return (
@@ -25,8 +12,10 @@ const Index = () => {
       <Navbar />
       <main>
         <Hero />
+        <ContentGallery />
         <Features />
-        <Testimonials />
+        <TestimonialsEnhanced />
+        <PricingSection />
         <AuditForm />
       </main>
       
