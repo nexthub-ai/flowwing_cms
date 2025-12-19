@@ -14,6 +14,10 @@ import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
 import Content from "./pages/Content";
 import Pricing from "./pages/Pricing";
+import Tools from "./pages/Tools";
+import Admin from "./pages/Admin";
+import Workflow from "./pages/Workflow";
+import AuditManagement from "./pages/AuditManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +46,38 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Content />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tools"
+              element={
+                <ProtectedRoute>
+                  <Tools />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/workflow"
+              element={
+                <ProtectedRoute>
+                  <Workflow />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/audit-management"
+              element={
+                <ProtectedRoute>
+                  <AuditManagement />
                 </ProtectedRoute>
               }
             />
