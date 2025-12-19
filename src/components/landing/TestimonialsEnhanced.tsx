@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Star, ChevronDown, ChevronUp } from "lucide-react";
 
 const testimonials = [
@@ -8,7 +8,6 @@ const testimonials = [
     avatar: "DO",
     rating: 5,
     content: "As a social media professional and content strategist, this platform has completely transformed how I manage my clients. The AI suggestions are incredibly accurate and save me hours every week.",
-    expanded: false,
   },
   {
     name: "JASON SCHOULTZ",
@@ -16,7 +15,6 @@ const testimonials = [
     avatar: "JS",
     rating: 5,
     content: "This platform has truly revolutionized our social media workflow. The scheduling features and team collaboration tools have made our content production 10x more efficient.",
-    expanded: false,
   },
   {
     name: "RAHIM HIRJI",
@@ -24,7 +22,6 @@ const testimonials = [
     avatar: "RH",
     rating: 5,
     content: "I have been writing my newsletter (Box of Amazing) for eight years covering emerging technology and trends, going from 0 to 50,000 subscribers. This tool helped me repurpose that content across all social platforms effortlessly.",
-    expanded: false,
   },
   {
     name: "LEBORAH M SPENCER",
@@ -32,7 +29,6 @@ const testimonials = [
     avatar: "LM",
     rating: 5,
     content: "My name is Leborah M Spencer and I've been using this platform for my wellness coaching business. The content templates and AI writing assistant have helped me maintain a consistent brand voice across all channels.",
-    expanded: false,
   },
   {
     name: "MARCUS CHEN",
@@ -40,7 +36,6 @@ const testimonials = [
     avatar: "MC",
     rating: 5,
     content: "We switched from three different tools to just this one platform. The ROI was immediate - our social engagement increased by 340% in the first quarter alone.",
-    expanded: false,
   },
   {
     name: "AMANDA FOSTER",
@@ -48,12 +43,44 @@ const testimonials = [
     avatar: "AF",
     rating: 5,
     content: "Managing 15 client accounts used to be a nightmare. Now with the multi-workspace feature and approval workflows, my team can handle twice the workload with half the stress.",
-    expanded: false,
   },
 ];
 
+// Duplicate for seamless loop
+const duplicatedTestimonials = [...testimonials, ...testimonials];
+
 export function TestimonialsEnhanced() {
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer || isPaused) return;
+
+    let animationId: number;
+    let scrollPosition = scrollContainer.scrollLeft;
+    const speed = 0.3;
+
+    const animate = () => {
+      scrollPosition += speed;
+      
+      // Reset position when we've scrolled through first set
+      const halfWidth = scrollContainer.scrollWidth / 2;
+      if (scrollPosition >= halfWidth) {
+        scrollPosition = 0;
+      }
+      
+      scrollContainer.scrollLeft = scrollPosition;
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animationId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+    };
+  }, [isPaused]);
 
   return (
     <section className="relative py-24 overflow-hidden">
@@ -69,11 +96,17 @@ export function TestimonialsEnhanced() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          {testimonials.map((testimonial, index) => (
+        {/* Auto-scrolling Testimonials */}
+        <div 
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-hidden pb-4"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {duplicatedTestimonials.map((testimonial, index) => (
             <div
-              key={testimonial.name}
-              className="group relative p-6 rounded-2xl bg-card border border-border/50 hover:border-primary/30 transition-all duration-300"
+              key={`${testimonial.name}-${index}`}
+              className="flex-shrink-0 w-80 group relative p-6 rounded-2xl bg-card border border-border/50 hover:border-primary/30 transition-all duration-300"
             >
               {/* Header */}
               <div className="flex items-start gap-3 mb-4">
