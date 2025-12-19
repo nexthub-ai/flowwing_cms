@@ -6,58 +6,40 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
-const plans = [
-  {
-    name: "Co-Pilot",
-    description: "Perfect for getting started",
-    price: 747,
-    priceId: "price_1RvyUnHUoeVfz3nsmRUYmMBd",
-    productId: "prod_SrhuDMExvsYHjG",
-    features: [
-      "10 posts/month",
-      "2 platforms",
-      "Smart scheduling",
-      "Basic analytics",
-      "Email support",
-    ],
-    popular: false,
-  },
-  {
-    name: "Auto-Pilot",
-    description: "Everything you need to grow",
-    price: 997,
-    priceId: "price_1RvyVRHUoeVfz3nsN1YdDrXC",
-    productId: "prod_Srhv5p8U1pdeM4",
-    features: [
-      "Unlimited posts",
-      "All platforms",
-      "Advanced scheduling",
-      "AI content generation",
-      "Team collaboration",
-      "Priority support",
-      "Custom workflows",
-    ],
-    popular: true,
-  },
-];
+const auditPlan = {
+  name: "Social Media Audit",
+  description: "Comprehensive analysis of your brand's online presence",
+  price: 100,
+  priceId: "price_1SfyJSHUoeVfz3ns8g2wiPbH",
+  productId: "prod_TdEnG2HqLyNSdz",
+  features: [
+    "Full social media audit",
+    "Competitor analysis",
+    "Content performance review",
+    "Audience insights report",
+    "Platform-specific recommendations",
+    "30-page detailed report",
+    "1-hour strategy call",
+  ],
+};
 
 export function PricingSection() {
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleCheckout = async (priceId: string, planName: string) => {
+  const handleCheckout = async () => {
     if (!user) {
       navigate("/auth");
       return;
     }
 
-    setLoadingPlan(planName);
+    setIsLoading(true);
 
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
-        body: { priceId },
+        body: { priceId: auditPlan.priceId },
       });
 
       if (error) throw error;
@@ -72,7 +54,7 @@ export function PricingSection() {
         variant: "destructive",
       });
     } finally {
-      setLoadingPlan(null);
+      setIsLoading(false);
     }
   };
 
@@ -84,71 +66,60 @@ export function PricingSection() {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 text-sm text-accent mb-6">
             <Sparkles className="h-4 w-4" />
-            <span>Simple Pricing</span>
+            <span>Get Started</span>
           </div>
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            Choose Your <span className="gradient-text">Growth Plan</span>
+            Social Media <span className="gradient-text">Audit</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Start free, upgrade when you're ready. Cancel anytime.
+            Get a comprehensive analysis of your brand's social media presence and actionable recommendations
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`relative p-8 rounded-2xl border ${
-                plan.popular
-                  ? "border-primary bg-gradient-to-b from-primary/10 to-transparent"
-                  : "border-border/50 bg-card"
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-primary text-primary-foreground text-sm font-medium">
-                  Most Popular
-                </div>
-              )}
-
-              <div className="mb-6">
-                <h3 className="font-display text-2xl font-bold mb-2">{plan.name}</h3>
-                <p className="text-muted-foreground">{plan.description}</p>
-              </div>
-
-              <div className="mb-6">
-                <span className="text-5xl font-display font-bold">${plan.price}</span>
-                <span className="text-muted-foreground">/month</span>
-              </div>
-
-              <ul className="space-y-3 mb-8">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-3">
-                    <div className="flex h-5 w-5 items-center justify-center rounded-full bg-success/20">
-                      <Check className="h-3 w-3 text-success" />
-                    </div>
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Button
-                variant={plan.popular ? "hero" : "outline"}
-                size="lg"
-                className="w-full"
-                onClick={() => handleCheckout(plan.priceId, plan.name)}
-                disabled={loadingPlan === plan.name}
-              >
-                {loadingPlan === plan.name ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  "Get Started"
-                )}
-              </Button>
+        <div className="max-w-lg mx-auto">
+          <div className="relative p-8 rounded-2xl border border-primary bg-gradient-to-b from-primary/10 to-transparent">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-primary text-primary-foreground text-sm font-medium">
+              One-Time Purchase
             </div>
-          ))}
+
+            <div className="mb-6 text-center">
+              <h3 className="font-display text-2xl font-bold mb-2">{auditPlan.name}</h3>
+              <p className="text-muted-foreground">{auditPlan.description}</p>
+            </div>
+
+            <div className="mb-6 text-center">
+              <span className="text-5xl font-display font-bold">${auditPlan.price}</span>
+              <span className="text-muted-foreground"> one-time</span>
+            </div>
+
+            <ul className="space-y-3 mb-8">
+              {auditPlan.features.map((feature) => (
+                <li key={feature} className="flex items-center gap-3">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-success/20">
+                    <Check className="h-3 w-3 text-success" />
+                  </div>
+                  <span className="text-sm">{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            <Button
+              variant="hero"
+              size="lg"
+              className="w-full"
+              onClick={handleCheckout}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                "Get Your Audit"
+              )}
+            </Button>
+          </div>
         </div>
       </div>
     </section>
