@@ -1,24 +1,35 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Zap, LayoutDashboard, FileText, Users, Settings, LogOut, LogIn, PenTool } from "lucide-react";
+import { 
+  Zap, LayoutDashboard, FileText, Users, Settings, LogOut, LogIn, 
+  PenTool, Wand2, GitBranch, UserCog, ClipboardCheck 
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Content", href: "/content", icon: PenTool },
-  { label: "Audits", href: "/audits", icon: FileText },
+  { label: "Workflow", href: "/workflow", icon: GitBranch },
+  { label: "Tools", href: "/tools", icon: Wand2 },
+  { label: "Audits", href: "/audit-management", icon: ClipboardCheck, roles: ["admin", "pms"] },
   { label: "Clients", href: "/clients", icon: Users },
+  { label: "Admin", href: "/admin", icon: UserCog, roles: ["admin"] },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 
 export function Navbar() {
   const location = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, signOut, hasRole } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
   };
+
+  const visibleNavItems = navItems.filter(item => {
+    if (!item.roles) return true;
+    return item.roles.some(role => hasRole(role as any));
+  });
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
@@ -34,13 +45,14 @@ export function Navbar() {
           </Link>
 
           {user && (
-            <div className="hidden md:flex items-center gap-1">
-              {navItems.map((item) => {
+            <div className="hidden lg:flex items-center gap-1">
+              {visibleNavItems.map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
                   <Link key={item.href} to={item.href}>
                     <Button
                       variant="ghost"
+                      size="sm"
                       className={cn(
                         "gap-2",
                         isActive && "bg-secondary text-primary"
