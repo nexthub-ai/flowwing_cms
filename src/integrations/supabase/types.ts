@@ -193,6 +193,71 @@ export type Database = {
           },
         ]
       }
+      brand_hub: {
+        Row: {
+          audience_profiles: Json | null
+          brand_mission: string | null
+          brand_name: string | null
+          brand_personality: string | null
+          brand_values: string | null
+          created_at: string | null
+          do_phrases: Json | null
+          dont_phrases: Json | null
+          example_content: Json | null
+          goals: Json | null
+          id: string
+          project_id: string | null
+          unique_selling_proposition: string | null
+          updated_at: string | null
+          voice_style: string | null
+          voice_tone: string | null
+        }
+        Insert: {
+          audience_profiles?: Json | null
+          brand_mission?: string | null
+          brand_name?: string | null
+          brand_personality?: string | null
+          brand_values?: string | null
+          created_at?: string | null
+          do_phrases?: Json | null
+          dont_phrases?: Json | null
+          example_content?: Json | null
+          goals?: Json | null
+          id?: string
+          project_id?: string | null
+          unique_selling_proposition?: string | null
+          updated_at?: string | null
+          voice_style?: string | null
+          voice_tone?: string | null
+        }
+        Update: {
+          audience_profiles?: Json | null
+          brand_mission?: string | null
+          brand_name?: string | null
+          brand_personality?: string | null
+          brand_values?: string | null
+          created_at?: string | null
+          do_phrases?: Json | null
+          dont_phrases?: Json | null
+          example_content?: Json | null
+          goals?: Json | null
+          id?: string
+          project_id?: string | null
+          unique_selling_proposition?: string | null
+          updated_at?: string | null
+          voice_style?: string | null
+          voice_tone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_hub_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: true
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       brand_voices: {
         Row: {
           best_used_for: string[] | null
@@ -327,6 +392,460 @@ export type Database = {
           youtube_url?: string | null
         }
         Relationships: []
+      }
+      cms_activity_log: {
+        Row: {
+          action: string
+          content_item_id: string | null
+          created_at: string | null
+          details: Json | null
+          id: string
+          project_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          content_item_id?: string | null
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          project_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          content_item_id?: string | null
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          project_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_activity_log_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cms_activity_log_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_approval_events: {
+        Row: {
+          approved_by: string
+          content_item_id: string
+          created_at: string | null
+          decision: string
+          id: string
+          note: string | null
+        }
+        Insert: {
+          approved_by: string
+          content_item_id: string
+          created_at?: string | null
+          decision: string
+          id?: string
+          note?: string | null
+        }
+        Update: {
+          approved_by?: string
+          content_item_id?: string
+          created_at?: string | null
+          decision?: string
+          id?: string
+          note?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_approval_events_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_audits: {
+        Row: {
+          challenges: string | null
+          converted_at: string | null
+          converted_by: string | null
+          converted_to_project_id: string | null
+          created_at: string | null
+          created_by: string | null
+          goals: string | null
+          id: string
+          instagram_url: string | null
+          lead_company: string | null
+          lead_email: string | null
+          lead_name: string | null
+          report_link: string | null
+          sections: Json | null
+          status: Database["public"]["Enums"]["audit_status"] | null
+          target_audience: string | null
+          tiktok_url: string | null
+          updated_at: string | null
+          website_url: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          challenges?: string | null
+          converted_at?: string | null
+          converted_by?: string | null
+          converted_to_project_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          goals?: string | null
+          id?: string
+          instagram_url?: string | null
+          lead_company?: string | null
+          lead_email?: string | null
+          lead_name?: string | null
+          report_link?: string | null
+          sections?: Json | null
+          status?: Database["public"]["Enums"]["audit_status"] | null
+          target_audience?: string | null
+          tiktok_url?: string | null
+          updated_at?: string | null
+          website_url?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          challenges?: string | null
+          converted_at?: string | null
+          converted_by?: string | null
+          converted_to_project_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          goals?: string | null
+          id?: string
+          instagram_url?: string | null
+          lead_company?: string | null
+          lead_email?: string | null
+          lead_name?: string | null
+          report_link?: string | null
+          sections?: Json | null
+          status?: Database["public"]["Enums"]["audit_status"] | null
+          target_audience?: string | null
+          tiktok_url?: string | null
+          updated_at?: string | null
+          website_url?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_audits_converted_to_project_id_fkey"
+            columns: ["converted_to_project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_comments: {
+        Row: {
+          author_id: string
+          comment_type: string | null
+          content_item_id: string
+          created_at: string | null
+          id: string
+          message: string
+        }
+        Insert: {
+          author_id: string
+          comment_type?: string | null
+          content_item_id: string
+          created_at?: string | null
+          id?: string
+          message: string
+        }
+        Update: {
+          author_id?: string
+          comment_type?: string | null
+          content_item_id?: string
+          created_at?: string | null
+          id?: string
+          message?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_comments_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_content_items: {
+        Row: {
+          actual_publish_date: string | null
+          caption_text: string | null
+          content_number: string | null
+          content_type: Database["public"]["Enums"]["content_type_enum"] | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          drive_folder_link: string | null
+          editor_id: string | null
+          final_asset_link: string | null
+          frame_project_link: string | null
+          id: string
+          needs_caption: boolean | null
+          needs_script: boolean | null
+          needs_thumbnail: boolean | null
+          owner_id: string | null
+          platform_post_ids: Json | null
+          platforms: Database["public"]["Enums"]["platform_enum"][] | null
+          priority: string | null
+          project_id: string
+          published_url: string | null
+          repurposed_from_id: string | null
+          script_content: string | null
+          script_doc_link: string | null
+          source_id: string | null
+          source_type: string | null
+          status: Database["public"]["Enums"]["content_status"] | null
+          tags: string[] | null
+          target_publish_date: string | null
+          thumbnail_brief: string | null
+          title: string
+          title_final: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          actual_publish_date?: string | null
+          caption_text?: string | null
+          content_number?: string | null
+          content_type?: Database["public"]["Enums"]["content_type_enum"] | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          drive_folder_link?: string | null
+          editor_id?: string | null
+          final_asset_link?: string | null
+          frame_project_link?: string | null
+          id?: string
+          needs_caption?: boolean | null
+          needs_script?: boolean | null
+          needs_thumbnail?: boolean | null
+          owner_id?: string | null
+          platform_post_ids?: Json | null
+          platforms?: Database["public"]["Enums"]["platform_enum"][] | null
+          priority?: string | null
+          project_id: string
+          published_url?: string | null
+          repurposed_from_id?: string | null
+          script_content?: string | null
+          script_doc_link?: string | null
+          source_id?: string | null
+          source_type?: string | null
+          status?: Database["public"]["Enums"]["content_status"] | null
+          tags?: string[] | null
+          target_publish_date?: string | null
+          thumbnail_brief?: string | null
+          title: string
+          title_final?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          actual_publish_date?: string | null
+          caption_text?: string | null
+          content_number?: string | null
+          content_type?: Database["public"]["Enums"]["content_type_enum"] | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          drive_folder_link?: string | null
+          editor_id?: string | null
+          final_asset_link?: string | null
+          frame_project_link?: string | null
+          id?: string
+          needs_caption?: boolean | null
+          needs_script?: boolean | null
+          needs_thumbnail?: boolean | null
+          owner_id?: string | null
+          platform_post_ids?: Json | null
+          platforms?: Database["public"]["Enums"]["platform_enum"][] | null
+          priority?: string | null
+          project_id?: string
+          published_url?: string | null
+          repurposed_from_id?: string | null
+          script_content?: string | null
+          script_doc_link?: string | null
+          source_id?: string | null
+          source_type?: string | null
+          status?: Database["public"]["Enums"]["content_status"] | null
+          tags?: string[] | null
+          target_publish_date?: string | null
+          thumbnail_brief?: string | null
+          title?: string
+          title_final?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_content_items_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cms_content_items_repurposed_from_id_fkey"
+            columns: ["repurposed_from_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_integration_config: {
+        Row: {
+          created_at: string | null
+          drive_folder_template: string | null
+          drive_root_folder_id: string | null
+          frame_team_id: string | null
+          id: string
+          project_id: string | null
+          slack_channel_id: string | null
+          slack_notification_types: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          drive_folder_template?: string | null
+          drive_root_folder_id?: string | null
+          frame_team_id?: string | null
+          id?: string
+          project_id?: string | null
+          slack_channel_id?: string | null
+          slack_notification_types?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          drive_folder_template?: string | null
+          drive_root_folder_id?: string | null
+          frame_team_id?: string | null
+          id?: string
+          project_id?: string | null
+          slack_channel_id?: string | null
+          slack_notification_types?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_integration_config_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: true
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_templates: {
+        Row: {
+          content_type: Database["public"]["Enums"]["content_type_enum"] | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          name: string
+          template_text: string | null
+          template_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          content_type?: Database["public"]["Enums"]["content_type_enum"] | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name: string
+          template_text?: string | null
+          template_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          content_type?: Database["public"]["Enums"]["content_type_enum"] | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name?: string
+          template_text?: string | null
+          template_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      cms_weekly_reports: {
+        Row: {
+          created_at: string | null
+          id: string
+          items_approved: number | null
+          items_blocked: number | null
+          items_published: number | null
+          items_rejected: number | null
+          next_week_schedule: Json | null
+          project_id: string
+          recommendations: Json | null
+          report_url: string | null
+          sent_at: string | null
+          summary: string | null
+          updated_at: string | null
+          week_end: string
+          week_start: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          items_approved?: number | null
+          items_blocked?: number | null
+          items_published?: number | null
+          items_rejected?: number | null
+          next_week_schedule?: Json | null
+          project_id: string
+          recommendations?: Json | null
+          report_url?: string | null
+          sent_at?: string | null
+          summary?: string | null
+          updated_at?: string | null
+          week_end: string
+          week_start: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          items_approved?: number | null
+          items_blocked?: number | null
+          items_published?: number | null
+          items_rejected?: number | null
+          next_week_schedule?: Json | null
+          project_id?: string
+          recommendations?: Json | null
+          report_url?: string | null
+          sent_at?: string | null
+          summary?: string | null
+          updated_at?: string | null
+          week_end?: string
+          week_start?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_weekly_reports_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       communications_log: {
         Row: {
@@ -864,6 +1383,47 @@ export type Database = {
         }
         Relationships: []
       }
+      projects: {
+        Row: {
+          client_id: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          name: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       repurpose_content: {
         Row: {
           approval_status: string | null
@@ -1163,6 +1723,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_tracked_profiles: {
         Row: {
           created_at: string | null
@@ -1370,9 +1951,62 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role:
+        | "agency_admin"
+        | "agency_manager"
+        | "creator_editor"
+        | "client_approver"
+        | "client_viewer"
+      audit_status:
+        | "draft"
+        | "internal_review"
+        | "final"
+        | "converted_to_project"
+      content_status:
+        | "idea"
+        | "planned"
+        | "scripting"
+        | "recording"
+        | "editing"
+        | "review"
+        | "changes_requested"
+        | "approved"
+        | "scheduled"
+        | "published"
+        | "archived"
+      content_type_enum:
+        | "youtube_video"
+        | "youtube_short"
+        | "instagram_reel"
+        | "instagram_post"
+        | "instagram_story"
+        | "tiktok"
+        | "linkedin_post"
+        | "blog"
+        | "podcast"
+        | "other"
+      platform_enum:
+        | "youtube"
+        | "instagram"
+        | "tiktok"
+        | "linkedin"
+        | "twitter"
+        | "blog"
+        | "podcast"
+        | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1499,6 +2133,55 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: [
+        "agency_admin",
+        "agency_manager",
+        "creator_editor",
+        "client_approver",
+        "client_viewer",
+      ],
+      audit_status: [
+        "draft",
+        "internal_review",
+        "final",
+        "converted_to_project",
+      ],
+      content_status: [
+        "idea",
+        "planned",
+        "scripting",
+        "recording",
+        "editing",
+        "review",
+        "changes_requested",
+        "approved",
+        "scheduled",
+        "published",
+        "archived",
+      ],
+      content_type_enum: [
+        "youtube_video",
+        "youtube_short",
+        "instagram_reel",
+        "instagram_post",
+        "instagram_story",
+        "tiktok",
+        "linkedin_post",
+        "blog",
+        "podcast",
+        "other",
+      ],
+      platform_enum: [
+        "youtube",
+        "instagram",
+        "tiktok",
+        "linkedin",
+        "twitter",
+        "blog",
+        "podcast",
+        "other",
+      ],
+    },
   },
 } as const
