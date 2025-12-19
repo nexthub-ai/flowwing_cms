@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_signups: {
+        Row: {
+          assigned_to: string | null
+          company_name: string | null
+          created_at: string
+          email: string
+          id: string
+          notes: string | null
+          social_handles: Json | null
+          status: string
+          stripe_payment_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          company_name?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          notes?: string | null
+          social_handles?: Json | null
+          status?: string
+          stripe_payment_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          company_name?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          notes?: string | null
+          social_handles?: Json | null
+          status?: string
+          stripe_payment_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       content_comments: {
         Row: {
           approval_status: string | null
@@ -163,6 +205,39 @@ export type Database = {
         }
         Relationships: []
       }
+      tools: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -198,7 +273,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "content_creator" | "pms" | "client"
+      app_role: "admin" | "content_creator" | "pms" | "client" | "creator"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -326,7 +401,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "content_creator", "pms", "client"],
+      app_role: ["admin", "content_creator", "pms", "client", "creator"],
     },
   },
 } as const
