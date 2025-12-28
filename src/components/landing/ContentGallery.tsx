@@ -3,49 +3,63 @@ import { Sparkles, Calendar, Users, BarChart3, Zap } from "lucide-react";
 
 const contentExamples = [
   {
-    type: "stats",
-    gradient: "from-violet-600 via-purple-600 to-indigo-800",
-    title: "2500+",
-    subtitle: "Posts Created",
-  },
-  {
     type: "quote",
-    gradient: "from-gray-900 to-black",
+    gradient: "from-slate-900 via-slate-800 to-slate-900",
     author: "Sarah Chen",
     handle: "@sarahchen",
     quote: "Take advice from people who have receipts, not just opinions.",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
   },
   {
     type: "stats",
-    gradient: "from-cyan-500 via-blue-600 to-purple-700",
+    gradient: "from-blue-500 via-indigo-500 to-purple-600",
     title: "340%",
     subtitle: "Engagement Increase",
+    bgImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=600&fit=crop",
   },
   {
     type: "stats",
-    gradient: "from-amber-500 via-orange-600 to-rose-600",
+    gradient: "from-orange-500 via-red-500 to-rose-600",
     title: "10x",
     subtitle: "Faster Content",
+    bgImage: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=600&fit=crop",
   },
   {
     type: "quote",
-    gradient: "from-emerald-600 to-teal-800",
+    gradient: "from-emerald-600 via-green-600 to-teal-700",
     author: "Marcus J.",
     handle: "@marcusj",
     quote: "The best CMS for social media teams. Period.",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
   },
   {
     type: "stats",
-    gradient: "from-pink-500 via-rose-500 to-red-600",
+    gradient: "from-pink-500 via-rose-500 to-fuchsia-600",
     title: "50M+",
     subtitle: "Impressions",
+    bgImage: "https://images.unsplash.com/photo-1557838923-2985c318be48?w=400&h=600&fit=crop",
+  },
+  {
+    type: "stats",
+    gradient: "from-violet-600 via-purple-600 to-indigo-700",
+    title: "2500+",
+    subtitle: "Posts Created",
+    bgImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=600&fit=crop",
   },
   {
     type: "quote",
-    gradient: "from-blue-600 to-cyan-700",
+    gradient: "from-cyan-600 via-blue-600 to-indigo-700",
     author: "Alex T.",
     handle: "@alext",
     quote: "Finally, a tool that understands content creators.",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop",
+  },
+  {
+    type: "stats",
+    gradient: "from-amber-500 via-yellow-500 to-orange-600",
+    title: "98%",
+    subtitle: "Client Satisfaction",
+    bgImage: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=600&fit=crop",
   },
 ];
 
@@ -121,28 +135,48 @@ export function ContentGallery() {
           {duplicatedContent.map((item, index) => (
             <div
               key={index}
-              className={`flex-shrink-0 w-64 h-96 rounded-2xl bg-gradient-to-br ${item.gradient} p-6 flex flex-col justify-end cursor-pointer relative overflow-hidden hover:scale-105 transition-transform duration-300`}
+              className={`flex-shrink-0 w-72 h-96 rounded-3xl bg-gradient-to-br ${item.gradient} p-8 flex flex-col justify-end cursor-pointer relative overflow-hidden hover:scale-[1.02] transition-all duration-300 shadow-2xl`}
             >
+              {/* Background image for stats cards */}
+              {item.type === "stats" && item.bgImage && (
+                <div 
+                  className="absolute inset-0 opacity-20"
+                  style={{ 
+                    backgroundImage: `url(${item.bgImage})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                  }}
+                />
+              )}
+              
               {/* Overlay pattern */}
-              <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.2),_transparent_70%)]" />
+              <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.3),_transparent_70%)]" />
               
               {item.type === "stats" ? (
                 <div className="relative z-10">
-                  <p className="text-5xl font-display font-bold text-white mb-2">{item.title}</p>
-                  <p className="text-white/80 text-sm">{item.subtitle}</p>
+                  <p className="text-7xl font-display font-bold text-white mb-3 tracking-tight">{item.title}</p>
+                  <p className="text-white/90 text-base font-medium">{item.subtitle}</p>
                 </div>
               ) : (
                 <div className="relative z-10">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white text-sm font-bold">
-                      {item.author?.charAt(0)}
-                    </div>
+                  <div className="flex items-center gap-3 mb-6">
+                    {item.avatar ? (
+                      <img 
+                        src={item.avatar} 
+                        alt={item.author}
+                        className="w-12 h-12 rounded-full object-cover border-2 border-white/30"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white text-base font-bold">
+                        {item.author?.charAt(0)}
+                      </div>
+                    )}
                     <div>
-                      <p className="text-white font-semibold text-sm">{item.author}</p>
-                      <p className="text-white/60 text-xs">{item.handle}</p>
+                      <p className="text-white font-semibold text-base">{item.author}</p>
+                      <p className="text-white/70 text-sm">{item.handle}</p>
                     </div>
                   </div>
-                  <p className="text-white text-lg leading-relaxed">"{item.quote}"</p>
+                  <p className="text-white text-xl leading-relaxed font-medium">"{item.quote}"</p>
                 </div>
               )}
             </div>

@@ -4,19 +4,17 @@ import { ContentGallery } from "@/components/landing/ContentGallery";
 import { Features } from "@/components/landing/Features";
 import { TestimonialsEnhanced } from "@/components/landing/TestimonialsEnhanced";
 import { PricingSection } from "@/components/landing/PricingSection";
-import { AuditForm } from "@/components/landing/AuditForm";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar showAuth={false} />
       <main>
         <Hero />
         <ContentGallery />
         <Features />
         <TestimonialsEnhanced />
         <PricingSection />
-        <AuditForm />
       </main>
       
       {/* Footer */}

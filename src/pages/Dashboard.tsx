@@ -2,16 +2,20 @@ import { Navbar } from "@/components/layout/Navbar";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { ClientList } from "@/components/dashboard/ClientList";
+import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { 
   FileText, 
   Users, 
   CheckCircle2, 
   Clock,
-  Plus 
+  Plus,
+  Loader2 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Dashboard = () => {
+  const { data: stats, isLoading, error } = useDashboardStats();
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -31,37 +35,53 @@ const Dashboard = () => {
             </Button>
           </div>
 
+          {/* Loading State */}
+          {isLoading && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && (
+            <div className="p-4 rounded-lg bg-destructive/10 text-destructive mb-8">
+              Failed to load dashboard statistics. Please try again.
+            </div>
+          )}
+
           {/* Stats */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
-            <StatCard
-              title="Leads Awaiting Audit"
-              value={8}
-              change="+3 this week"
-              changeType="positive"
-              icon={FileText}
-            />
-            <StatCard
-              title="Audits In Progress"
-              value={4}
-              change="2 due today"
-              changeType="neutral"
-              icon={Clock}
-            />
-            <StatCard
-              title="Active Clients"
-              value={12}
-              change="+2 this month"
-              changeType="positive"
-              icon={Users}
-            />
-            <StatCard
-              title="Pending Approvals"
-              value={6}
-              change="3 urgent"
-              changeType="negative"
-              icon={CheckCircle2}
-            />
-          </div>
+          {stats && (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+              <StatCard
+                title="Leads Awaiting Audit"
+                value={stats.pendingAudits}
+                change={stats.pendingAudits > 0 ? "+3 this week" : "All caught up"}
+                changeType={stats.pendingAudits > 5 ? "negative" : "positive"}
+                icon={FileText}
+              />
+              <StatCard
+                title="Audits In Progress"
+                value={stats.auditsInProgress}
+                change={stats.auditsInProgress > 0 ? "2 due today" : "None active"}
+                changeType="neutral"
+                icon={Clock}
+              />
+              <StatCard
+                title="Active Clients"
+                value={stats.activeClients}
+                change="+2 this month"
+                changeType="positive"
+                icon={Users}
+              />
+              <StatCard
+                title="Pending Approvals"
+                value={stats.pendingApprovals}
+                change={stats.pendingApprovals > 3 ? "3 urgent" : "On track"}
+                changeType={stats.pendingApprovals > 5 ? "negative" : "positive"}
+                icon={CheckCircle2}
+              />
+            </div>
+          )}
 
           {/* Content Grid */}
           <div className="grid gap-6 lg:grid-cols-2">

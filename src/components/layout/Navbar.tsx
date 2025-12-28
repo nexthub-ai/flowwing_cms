@@ -18,7 +18,11 @@ const navItems = [
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 
-export function Navbar() {
+interface NavbarProps {
+  showAuth?: boolean;
+}
+
+export function Navbar({ showAuth = true }: NavbarProps) {
   const location = useLocation();
   const { user, signOut, hasRole } = useAuth();
 
@@ -44,7 +48,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          {user && (
+          {showAuth && user && (
             <div className="hidden lg:flex items-center gap-1">
               {visibleNavItems.map((item) => {
                 const isActive = location.pathname === item.href;
@@ -68,32 +72,34 @@ export function Navbar() {
           )}
 
           <div className="flex items-center gap-3">
-            {!user && (
+            {!showAuth && (
               <Link to="/pricing">
                 <Button variant="ghost" size="sm">
                   Pricing
                 </Button>
               </Link>
             )}
-            {user ? (
-              <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2">
-                <LogOut className="h-4 w-4" />
-                Sign Out
-              </Button>
-            ) : (
-              <>
-                <Link to="/auth">
-                  <Button variant="ghost" size="sm" className="gap-2">
-                    <LogIn className="h-4 w-4" />
-                    Sign In
-                  </Button>
-                </Link>
-                <Link to="/auth">
-                  <Button variant="hero" size="sm">
-                    Get Started
-                  </Button>
-                </Link>
-              </>
+            {showAuth && (
+              user ? (
+                <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2">
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
+              ) : (
+                <>
+                  <Link to="/auth">
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <LogIn className="h-4 w-4" />
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link to="/auth">
+                    <Button variant="hero" size="sm">
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              )
             )}
           </div>
         </div>

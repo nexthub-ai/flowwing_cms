@@ -4,7 +4,7 @@ import { PricingSection } from "@/components/landing/PricingSection";
 const Pricing = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar showAuth={false} />
       <main className="pt-16">
         <PricingSection />
       </main>

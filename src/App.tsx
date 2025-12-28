@@ -8,7 +8,8 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
-import Audit from "./pages/Audit";
+import AuditStart from "./pages/AuditStart";
+import AuditThankYou from "./pages/AuditThankYou";
 import Audits from "./pages/Audits";
 import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
@@ -30,9 +31,16 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+            {/* Public Routes */}
             <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/audit/start" element={<AuditStart />} />
+            <Route path="/audit/thank-you" element={<AuditThankYou />} />
             <Route path="/pricing" element={<Pricing />} />
+            
+            {/* Auth Route */}
+            <Route path="/auth" element={<Auth />} />
+            
+            {/* Protected CMS Routes */}
             <Route
               path="/dashboard"
               element={
@@ -78,14 +86,6 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <AuditManagement />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/audit"
-              element={
-                <ProtectedRoute>
-                  <Audit />
                 </ProtectedRoute>
               }
             />

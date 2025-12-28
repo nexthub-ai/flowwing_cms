@@ -45,12 +45,15 @@ export function PricingSection() {
       if (error) throw error;
 
       if (data?.url) {
-        window.open(data.url, "_blank");
+        window.location.href = data.url;
+      } else {
+        throw new Error("Checkout link not available");
       }
-    } catch (error: any) {
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to start checkout";
       toast({
         title: "Error",
-        description: error.message || "Failed to start checkout",
+        description: message,
         variant: "destructive",
       });
     } finally {
