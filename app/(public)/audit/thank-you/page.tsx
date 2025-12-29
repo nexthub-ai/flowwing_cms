@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, Mail, Clock, ArrowRight, Loader2 } from "lucide-react";
 import { createClient } from "@/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import Image from "next/image";
 
 export default function AuditThankYouPage() {
   const router = useRouter();
@@ -87,7 +88,8 @@ export default function AuditThankYouPage() {
     );
   }
 
-  if (!paymentVerified) {
+  // If no audit_id in URL, redirect to home
+  if (!auditId) {
     router.push("/");
     return null;
   }
@@ -97,68 +99,30 @@ export default function AuditThankYouPage() {
       <Navbar showAuth={false} />
       <main className="pt-24 pb-12">
         <div className="container px-6">
-          <div className="max-w-2xl mx-auto text-center">
-            {/* Success Icon */}
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 mb-8 shadow-lg">
-              <CheckCircle2 className="h-12 w-12 text-white" />
-            </div>
+          <div className="max-w-2xl mx-auto text-center"> 
 
             {/* Heading */}
             <h1 className="font-display text-4xl md:text-5xl font-bold mb-4">
-              Audit Request Received!
+              Thank You for Your Order!
             </h1>
             <p className="text-xl text-muted-foreground mb-12">
-              We're analyzing your personal brand presence and will send you a comprehensive 
-              report within the next 24-48 hours.
+              Your personal brand audit request has been received. We'll analyze your presence 
+              and deliver a comprehensive report within 24-48 hours.
             </p>
-
-            {/* What's Next */}
-            <div className="space-y-6 mb-12">
-              <div className="p-6 rounded-xl border border-border/50 bg-card text-left">
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Mail className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">Check Your Email</h3>
-                    <p className="text-muted-foreground">
-                      We've sent a confirmation to your email. Your detailed audit report 
-                      will be delivered to the same inbox.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6 rounded-xl border border-border/50 bg-card text-left">
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Clock className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">Our Analysis Process</h3>
-                    <p className="text-muted-foreground mb-3">
-                      Our team will analyze:
-                    </p>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Content quality and engagement metrics</li>
-                      <li>• Audience demographics and behavior</li>
-                      <li>• Posting frequency and timing</li>
-                      <li>• Competitor benchmarking</li>
-                      <li>• Growth opportunities and recommendations</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             {/* CTA */}
             <div className="p-8 rounded-2xl border border-border/50 bg-gradient-to-br from-primary/5 to-accent/5">
+              <div className="flex items-center justify-center mb-4">
+                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Mail className="h-6 w-6 text-primary" />
+                </div>
+              </div>
               <h3 className="font-display text-2xl font-bold mb-3">
-                Want to Supercharge Your Growth?
+                Check Your Email
               </h3>
               <p className="text-muted-foreground mb-6">
-                After receiving your audit, consider our services to implement the recommendations 
-                and scale your personal brand presence.
+                We've sent a confirmation to your email. Your detailed audit report with 
+                actionable insights will be delivered to the same inbox within 24-48 hours.
               </p>
               <Button 
                 variant="hero" 
@@ -170,16 +134,7 @@ export default function AuditThankYouPage() {
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </div>
-
-            {/* Back to Home */}
-            <div className="mt-12">
-              <Button 
-                variant="ghost" 
-                onClick={() => router.push("/")}
-              >
-                Back to Home
-              </Button>
-            </div>
+ 
           </div>
         </div>
       </main>

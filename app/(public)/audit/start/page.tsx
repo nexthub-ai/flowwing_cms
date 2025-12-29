@@ -7,16 +7,20 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
+import Image from "next/image";
+import Link from "next/link";
 import { 
   Instagram, Youtube, Music2, Globe, Mail, Building2, 
-  ArrowRight, Loader2, CheckCircle2, BarChart3, Target, Zap
+  ArrowRight, Loader2, BarChart3, Target, Zap
 } from "lucide-react";
 
 export default function AuditStartPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [formData, setFormData] = useState({
     company_name: "",
     email: "",
@@ -34,6 +38,35 @@ export default function AuditStartPage() {
       toast({
         title: "Social Account Required",
         description: "Please provide at least one social account URL.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate URL format for provided social accounts
+    const urlValidation = [
+      { value: formData.instagram, name: "Instagram", pattern: /^https?:\/\/(www\.)?(instagram\.com|instagr\.am)\/.+$/i },
+      { value: formData.tiktok, name: "TikTok", pattern: /^https?:\/\/(www\.)?tiktok\.com\/@.+$/i },
+      { value: formData.youtube, name: "YouTube", pattern: /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/.+$/i },
+      { value: formData.website, name: "Website", pattern: /^https?:\/\/.+\..+$/i },
+    ];
+
+    for (const { value, name, pattern } of urlValidation) {
+      if (value && !pattern.test(value)) {
+        toast({
+          title: "Invalid URL",
+          description: `Please provide a valid ${name} URL.`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
+    // Validate terms acceptance
+    if (!agreedToTerms) {
+      toast({
+        title: "Terms Required",
+        description: "Please accept the terms and conditions to continue.",
         variant: "destructive",
       });
       return;
@@ -90,48 +123,24 @@ export default function AuditStartPage() {
           <div className="max-w-3xl mx-auto">
             {/* Header */}
             <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent mb-6">
-                <CheckCircle2 className="h-8 w-8 text-primary-foreground" />
-              </div>
-              <h1 className="font-display text-4xl md:text-5xl font-bold mb-4">
+              <div className="inline-flex items-center align-middle justify-center gap-1 mb-6">
+                <Image 
+                  src="/logo.svg" 
+                  alt="FlowWing Audit" 
+                  width={60} 
+                  height={60}
+                  className="drop-shadow-lg"
+                />
+             
+              <h1 className="font-display text-4xl md:text-5xl font-bold ">
                 Personal Brand Audit
-              </h1>
+              </h1> 
+              </div>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Get a comprehensive analysis of your personal brand across all platforms with actionable 
                 recommendations to grow your influence.
               </p>
-            </div>
-
-            {/* Features */}
-            <div className="grid md:grid-cols-3 gap-6 mb-12">
-              <div className="p-6 rounded-xl border border-border/50 bg-secondary/30">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary mb-3">
-                  <BarChart3 className="h-6 w-6" />
-                </div>
-                <h3 className="font-semibold mb-1">Deep Analysis</h3>
-                <p className="text-sm text-muted-foreground">
-                  Content quality, engagement metrics, and audience insights
-                </p>
-              </div>
-              <div className="p-6 rounded-xl border border-border/50 bg-secondary/30">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary mb-3">
-                  <Target className="h-6 w-6" />
-                </div>
-                <h3 className="font-semibold mb-1">Action Plan</h3>
-                <p className="text-sm text-muted-foreground">
-                  Clear recommendations to improve reach and conversions
-                </p>
-              </div>
-              <div className="p-6 rounded-xl border border-border/50 bg-secondary/30">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary mb-3">
-                  <Zap className="h-6 w-6" />
-                </div>
-                <h3 className="font-semibold mb-1">Fast Delivery</h3>
-                <p className="text-sm text-muted-foreground">
-                  Receive your detailed report within 24-48 hours
-                </p>
-              </div>
-            </div>
+            </div> 
 
             {/* Form */}
             <div className="p-8 rounded-2xl border border-border/50 bg-card shadow-xl">
@@ -254,21 +263,44 @@ export default function AuditStartPage() {
                 </div>
 
                 {/* Price Summary */}
-                <div className="p-4 rounded-xl bg-secondary/50 border border-border/50">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Personal Brand Audit</span>
-                    <span className="font-display text-2xl font-bold">$100</span>
+                {/* Terms and Conditions */}
+                <div className="flex items-start gap-3 p-4 rounded-lg border border-border/50 bg-secondary/30">
+                  <Checkbox
+                    id="terms"
+                    checked={agreedToTerms}
+                    onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <Label
+                      htmlFor="terms"
+                      className="text-sm font-normal cursor-pointer leading-relaxed"
+                    >
+                      I agree to the{" "}
+                      <Link 
+                        href="/terms" 
+                        target="_blank"
+                        className="text-primary hover:underline font-medium"
+                      >
+                        Terms and Conditions
+                      </Link>
+                      {" "}and{" "}
+                      <Link 
+                        href="/privacy" 
+                        target="_blank"
+                        className="text-primary hover:underline font-medium"
+                      >
+                        Privacy Policy
+                      </Link>
+                    </Label>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    One-time payment • Detailed report • 24-48 hour delivery
-                  </p>
                 </div>
 
                 <Button
                   type="submit"
                   variant="hero"
                   size="lg"
-                  className="w-full gap-2"
+                  className="w-full gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={isLoading}
                 >
                   {isLoading ? (

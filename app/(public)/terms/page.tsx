@@ -13,7 +13,7 @@ export default function TermsPage() {
         <div className="container px-6">
           <div className="max-w-4xl">
           
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-4">Terms and Conditions</h1>
+          <h1 className="font-display text-4xl md:text-5xl font-bold mb-8">Terms and Conditions</h1>
            
           <div className="prose prose-slate dark:prose-invert max-w-none space-y-8">
             <section>
