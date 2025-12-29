@@ -16,7 +16,7 @@ const features = [
   {
     icon: MessageSquare,
     title: "Brand Voice Analysis",
-    description: "AI-powered assessment of your brand messaging consistency and tone across platforms.",
+    description: "AI-powered assessment of your personal brand messaging consistency and tone across platforms.",
   },
   {
     icon: FileCheck,
@@ -36,7 +36,7 @@ const features = [
   {
     icon: Zap,
     title: "Quick Wins",
-    description: "Immediate actionable steps to boost your social media presence within days.",
+    description: "Immediate actionable steps to boost your personal brand presence within days.",
   },
 ];
 
@@ -49,7 +49,7 @@ export function Features() {
             What You'll Get
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            A complete breakdown of your social media presence with actionable insights
+            A complete breakdown of your personal brand presence with actionable insights
           </p>
         </div>
 

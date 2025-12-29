@@ -26,13 +26,13 @@ export function Hero() {
 
           {/* Heading */}
           <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight mb-6 animate-fade-up opacity-0 stagger-1">
-            Transform Your{" "}
-            <span className="gradient-text">Social Presence</span>
+            Audit Your{" "}
+            <span className="gradient-text">Personal Brand</span>
           </h1>
 
           {/* Subheading */}
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-8 animate-fade-up opacity-0 stagger-2">
-            Get a comprehensive AI-powered audit of your social media accounts with actionable insights to grow your brand.
+            Get a comprehensive AI-powered audit of your personal brand across all social platforms with actionable insights to grow your influence.
           </p>
 
           {/* Price */}
@@ -62,11 +62,11 @@ export function Hero() {
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Link href="/pricing">
+            <a href="#pricing">
               <Button variant="glass" size="xl">
                 View Pricing
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
       </div>

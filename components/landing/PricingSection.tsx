@@ -9,17 +9,17 @@ import { useAppSelector } from "@/store/hooks";
 import { selectUser } from "@/store/slices/authSlice";
 
 const auditPlan = {
-  name: "Social Media Audit",
-  description: "Comprehensive analysis of your brand's online presence",
+  name: "Personal Brand Audit",
+  description: "Comprehensive analysis of your personal brand's online presence",
   price: 100,
   priceId: "price_1SfyJSHUoeVfz3ns8g2wiPbH",
   productId: "prod_TdEnG2HqLyNSdz",
   features: [
-    "Full social media audit",
-    "Competitor analysis",
+    "Full personal brand audit",
+    "Cross-platform analysis",
     "Content performance review",
     "Audience insights report",
-    "Platform-specific recommendations",
+    "Personal brand positioning recommendations",
     "30-page detailed report",
     "1-hour strategy call",
   ],
@@ -33,10 +33,8 @@ export function PricingSection() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCheckout = async () => {
-    if (!user) {
-      router.push("/login");
-      return;
-    }
+    router.push("/audit/start");
+    return;
 
     setIsLoading(true);
 
@@ -83,10 +81,10 @@ export function PricingSection() {
             <span>Get Started</span>
           </div>
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            Social Media <span className="gradient-text">Audit</span>
+            Personal Brand <span className="gradient-text">Audit</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Get a comprehensive analysis of your brand's social media presence and actionable recommendations
+            Get a comprehensive analysis of your personal brand presence across all platforms with actionable recommendations
           </p>
         </div>
 
