@@ -1,0 +1,121 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { Button } from "@/components/ui/button";
+import { 
+  Zap, LayoutDashboard, FileText, Users, Settings, LogOut, LogIn, 
+  PenTool, Wand2, GitBranch, UserCog, ClipboardCheck 
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { selectUser, selectRoles, signOut } from "@/store/slices/authSlice";
+
+const navItems = [
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Content", href: "/content", icon: PenTool },
+  { label: "Workflow", href: "/workflow", icon: GitBranch },
+  { label: "Tools", href: "/tools", icon: Wand2 },
+  { label: "Audits", href: "/audits", icon: ClipboardCheck, roles: ["admin", "pms"] as const },
+  { label: "Clients", href: "/clients", icon: Users },
+  { label: "Admin", href: "/admin", icon: UserCog, roles: ["admin"] as const },
+  { label: "Settings", href: "/settings", icon: Settings },
+];
+
+interface NavbarProps {
+  showAuth?: boolean;
+}
+
+export function Navbar({ showAuth = true }: NavbarProps) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  const roles = useAppSelector(selectRoles);
+
+  const handleSignOut = async () => {
+    await dispatch(signOut());
+    router.push('/');
+  };
+
+  const hasRole = (role: string) => {
+    return roles.includes(role as any);
+  };
+
+  const visibleNavItems = navItems.filter(item => {
+    if (!item.roles) return true;
+    return item.roles.some(role => hasRole(role));
+  });
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+      <div className="container mx-auto px-6">
+        <div className="flex h-16 items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent">
+              <Zap className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <span className="font-display text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+              FlowWing
+            </span>
+          </Link>
+
+          {showAuth && user && (
+            <div className="hidden lg:flex items-center gap-1">
+              {visibleNavItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link key={item.href} href={item.href}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={cn(
+                        "gap-2",
+                        isActive && "bg-secondary text-primary"
+                      )}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      {item.label}
+                    </Button>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="flex items-center gap-3">
+            {!showAuth && (
+              <Link href="/pricing">
+                <Button variant="ghost" size="sm">
+                  Pricing
+                </Button>
+              </Link>
+            )}
+            {showAuth && (
+              user ? (
+                <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2">
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <LogIn className="h-4 w-4" />
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link href="/signup">
+                    <Button variant="hero" size="sm">
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              )
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
