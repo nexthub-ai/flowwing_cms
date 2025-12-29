@@ -12,8 +12,9 @@ import {
   ClipboardCheck, Loader2, Building2, Globe, 
   Clock, CheckCircle2, PlayCircle, Eye, CircleDot
 } from "lucide-react";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectRoles } from "@/store/slices/authSlice";
+import { loadAudits, selectAudits, selectAuditsLoading } from "@/store/slices/auditsSlice";
 import { createClient } from "@/supabase/client";
 
 type AuditStatus = "pending" | "planning" | "in_progress" | "review" | "completed";
@@ -45,44 +46,27 @@ interface AuditSignup {
 }
 
 export default function AuditManagementPage() {
+  const dispatch = useAppDispatch();
   const roles = useAppSelector(selectRoles);
+  const audits = useAppSelector(selectAudits);
+  const isLoading = useAppSelector(selectAuditsLoading);
   const { toast } = useToast();
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [audits, setAudits] = useState<AuditSignup[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
 
   const canManage = roles.includes("admin") || roles.includes("pms");
 
   useEffect(() => {
     if (canManage) {
-      loadAudits();
-    } else {
-      setIsLoading(false);
-    }
-  }, [canManage]);
-
-  const loadAudits = async () => {
-    try {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("audit_signups")
-        .select("*")
-        .order("created_at", { ascending: false });
-      
-      if (error) throw error;
-      setAudits(data as AuditSignup[]);
-    } catch (error: any) {
-      console.error("Error loading audits:", error);
-      toast({
-        title: "Error loading audits",
-        description: error.message,
-        variant: "destructive"
+      dispatch(loadAudits()).catch((error) => {
+        toast({
+          title: "Error loading audits",
+          description: error.message,
+          variant: "destructive"
+        });
       });
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, [canManage, dispatch, toast]);
 
   const updateStatus = async (auditId: string, newStatus: AuditStatus) => {
     setIsUpdating(true);
@@ -95,7 +79,7 @@ export default function AuditManagementPage() {
       
       if (error) throw error;
       
-      await loadAudits();
+      await dispatch(loadAudits());
       toast({ title: "Audit status updated" });
     } catch (error: any) {
       toast({ 

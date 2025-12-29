@@ -12,8 +12,8 @@ export function Footer() {
               <Image 
                 src="/logo.svg" 
                 alt="FlowWing Logo" 
-                width={48} 
-                height={48} 
+                width={32} 
+                height={32} 
                 className="transition-transform group-hover:scale-105"
               />
               <span className="font-display text-xl font-bold text-foreground">

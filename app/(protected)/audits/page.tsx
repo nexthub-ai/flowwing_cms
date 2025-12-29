@@ -1,46 +1,37 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Plus, Search, Filter, Loader2, Eye, FileText } from 'lucide-react';
-import { createClient } from '@/supabase/client';
-import { AuditService, AuditSignup } from '@/services/auditService';
 import { STATUS_COLORS } from '@/constants/constants';
 import { useToast } from '@/hooks/use-toast';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { loadAudits, selectAudits, selectAuditsLoading } from '@/store/slices/auditsSlice';
+import { useState } from 'react';
 
 /**
  * Audits Page (Client Component)
- * Manages audit signups with service layer architecture
+ * Manages audit signups with Redux state management
  */
 export default function AuditsPage() {
   const { toast } = useToast();
-  const [audits, setAudits] = useState<AuditSignup[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const audits = useAppSelector(selectAudits);
+  const isLoading = useAppSelector(selectAuditsLoading);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    loadAudits();
-  }, []);
-
-  const loadAudits = async () => {
-    try {
-      setIsLoading(true);
-      const supabase = createClient();
-      const data = await AuditService.getAuditSignups(supabase);
-      setAudits(data);
-    } catch (error) {
+    dispatch(loadAudits()).catch(() => {
       toast({
         title: 'Error',
         description: 'Failed to load audits',
         variant: 'destructive',
       });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    });
+  }, [dispatch, toast]);
 
   const filteredAudits = audits.filter(
     (audit) =>

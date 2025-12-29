@@ -11,6 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectUser, selectRoles, signOut } from "@/store/slices/authSlice";
+import { useState, useEffect } from 'react';
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -33,6 +34,16 @@ export function Navbar({ showAuth = true }: NavbarProps) {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const roles = useAppSelector(selectRoles);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSignOut = async () => {
     await dispatch(signOut());
@@ -49,7 +60,12 @@ export function Navbar({ showAuth = true }: NavbarProps) {
   });
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+    <nav className={cn(
+      "fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300",
+      isScrolled 
+        ? "border-border/50 bg-background/80 backdrop-blur-xl" 
+        : "border-border/10 bg-transparent backdrop-blur-sm"
+    )}>
       <div className="container mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">

@@ -1,46 +1,37 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Plus, Search, Filter, Loader2 } from 'lucide-react';
-import { createClient } from '@/supabase/client';
-import { ContentService, ContentPost } from '@/services/contentService';
 import { STATUS_COLORS } from '@/constants/constants';
 import { useToast } from '@/hooks/use-toast';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { loadContent, selectContent, selectContentLoading } from '@/store/slices/contentSlice';
+import { useState } from 'react';
 
 /**
  * Content Page (Client Component)
- * Manages content posts with service layer architecture
+ * Manages content posts with Redux state management
  */
 export default function ContentPage() {
   const { toast } = useToast();
-  const [posts, setPosts] = useState<ContentPost[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const posts = useAppSelector(selectContent);
+  const isLoading = useAppSelector(selectContentLoading);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    loadPosts();
-  }, []);
-
-  const loadPosts = async () => {
-    try {
-      setIsLoading(true);
-      const supabase = createClient();
-      const data = await ContentService.getContentPosts(supabase);
-      setPosts(data);
-    } catch (error) {
+    dispatch(loadContent()).catch(() => {
       toast({
         title: 'Error',
         description: 'Failed to load content posts',
         variant: 'destructive',
       });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    });
+  }, [dispatch, toast]);
 
   const filteredPosts = posts.filter((post) =>
     post.title.toLowerCase().includes(searchQuery.toLowerCase())
