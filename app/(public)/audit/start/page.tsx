@@ -3,13 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { 
   Instagram, Youtube, Music2, Globe, Mail, Building2, 
-  ArrowRight, Loader2, CheckCircle2 
+  ArrowRight, Loader2, CheckCircle2, BarChart3, Target, Zap
 } from "lucide-react";
 
 export default function AuditStartPage() {
@@ -31,8 +32,8 @@ export default function AuditStartPage() {
     // Validate at least one social media account
     if (!formData.instagram && !formData.tiktok && !formData.youtube) {
       toast({
-        title: "Social Media Required",
-        description: "Please provide at least one social media account URL.",
+        title: "Social Account Required",
+        description: "Please provide at least one social account URL.",
         variant: "destructive",
       });
       return;
@@ -93,32 +94,38 @@ export default function AuditStartPage() {
                 <CheckCircle2 className="h-8 w-8 text-primary-foreground" />
               </div>
               <h1 className="font-display text-4xl md:text-5xl font-bold mb-4">
-                Social Media Audit
+                Personal Brand Audit
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Get a comprehensive analysis of your social media presence with actionable 
-                recommendations to grow your brand.
+                Get a comprehensive analysis of your personal brand across all platforms with actionable 
+                recommendations to grow your influence.
               </p>
             </div>
 
             {/* Features */}
             <div className="grid md:grid-cols-3 gap-6 mb-12">
               <div className="p-6 rounded-xl border border-border/50 bg-secondary/30">
-                <div className="text-2xl mb-2">📊</div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary mb-3">
+                  <BarChart3 className="h-6 w-6" />
+                </div>
                 <h3 className="font-semibold mb-1">Deep Analysis</h3>
                 <p className="text-sm text-muted-foreground">
                   Content quality, engagement metrics, and audience insights
                 </p>
               </div>
               <div className="p-6 rounded-xl border border-border/50 bg-secondary/30">
-                <div className="text-2xl mb-2">🎯</div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary mb-3">
+                  <Target className="h-6 w-6" />
+                </div>
                 <h3 className="font-semibold mb-1">Action Plan</h3>
                 <p className="text-sm text-muted-foreground">
                   Clear recommendations to improve reach and conversions
                 </p>
               </div>
               <div className="p-6 rounded-xl border border-border/50 bg-secondary/30">
-                <div className="text-2xl mb-2">⚡</div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary mb-3">
+                  <Zap className="h-6 w-6" />
+                </div>
                 <h3 className="font-semibold mb-1">Fast Delivery</h3>
                 <p className="text-sm text-muted-foreground">
                   Receive your detailed report within 24-48 hours
@@ -170,7 +177,7 @@ export default function AuditStartPage() {
                 </div>
 
                 <div className="border-t border-border/50 pt-6">
-                  <h3 className="font-semibold mb-4">Social Media Accounts</h3>
+                  <h3 className="font-semibold mb-4">Your Social Accounts</h3>
                   <div className="grid gap-4">
                     {/* Instagram */}
                     <div className="space-y-2">
@@ -242,14 +249,14 @@ export default function AuditStartPage() {
                   </div>
 
                   <p className="text-sm text-muted-foreground mt-4">
-                    * Provide at least one social media account for the audit
+                    * Provide at least one social account for the audit
                   </p>
                 </div>
 
                 {/* Price Summary */}
                 <div className="p-4 rounded-xl bg-secondary/50 border border-border/50">
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Social Media Audit</span>
+                    <span className="text-muted-foreground">Personal Brand Audit</span>
                     <span className="font-display text-2xl font-bold">$100</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
@@ -285,6 +292,7 @@ export default function AuditStartPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

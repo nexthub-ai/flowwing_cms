@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
+import Image from 'next/image';
 import { 
   Zap, LayoutDashboard, FileText, Users, Settings, LogOut, LogIn, 
   PenTool, Wand2, GitBranch, UserCog, ClipboardCheck 
@@ -52,9 +53,13 @@ export function Navbar({ showAuth = true }: NavbarProps) {
       <div className="container mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent">
-              <Zap className="h-5 w-5 text-primary-foreground" />
-            </div>
+            <Image 
+              src="/logo.svg" 
+              alt="FlowWing Logo" 
+              width={48} 
+              height={48} 
+              className="transition-transform object-cover group-hover:scale-105"
+            />
             <span className="font-display text-xl font-bold text-foreground group-hover:text-primary transition-colors">
               FlowWing
             </span>
@@ -85,9 +90,9 @@ export function Navbar({ showAuth = true }: NavbarProps) {
 
           <div className="flex items-center gap-3">
             {!showAuth && (
-              <Link href="/pricing">
-                <Button variant="ghost" size="sm">
-                  Pricing
+              <Link href="/audit/start">
+                <Button variant="hero" size="sm">
+                  Start Audit
                 </Button>
               </Link>
             )}

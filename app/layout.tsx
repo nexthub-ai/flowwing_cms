@@ -10,8 +10,11 @@ import { ReduxProvider } from "@/components/providers/redux-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "FlowWing CMS - Social Media Management",
-  description: "Comprehensive CMS for social media agencies",
+  title: "FlowWing - Personal Brand Audit Tool",
+  description: "Get a comprehensive AI-powered audit of your personal brand with actionable insights",
+  icons: {
+    icon: '/logo.svg',
+  },
 };
 
 export default function RootLayout({

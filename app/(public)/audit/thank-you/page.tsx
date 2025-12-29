@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Mail, Clock, ArrowRight, Loader2 } from "lucide-react";
 import { createClient } from "@/supabase/client";
@@ -107,7 +108,7 @@ export default function AuditThankYouPage() {
               Audit Request Received!
             </h1>
             <p className="text-xl text-muted-foreground mb-12">
-              We're analyzing your social media presence and will send you a comprehensive 
+              We're analyzing your personal brand presence and will send you a comprehensive 
               report within the next 24-48 hours.
             </p>
 
@@ -156,16 +157,16 @@ export default function AuditThankYouPage() {
                 Want to Supercharge Your Growth?
               </h3>
               <p className="text-muted-foreground mb-6">
-                After receiving your audit, consider our full content management services 
-                to implement the recommendations and scale your social media presence.
+                After receiving your audit, consider our services to implement the recommendations 
+                and scale your personal brand presence.
               </p>
               <Button 
                 variant="hero" 
                 size="lg" 
                 className="gap-2"
-                onClick={() => router.push("/pricing")}
+                onClick={() => router.push("/")}
               >
-                Explore Services
+                Back to Home
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </div>
@@ -183,19 +184,7 @@ export default function AuditThankYouPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border/50 py-8 mt-12">
-        <div className="container px-6">
-          <div className="text-center text-sm text-muted-foreground">
-            <p>
-              Questions? Email us at{" "}
-              <a href="mailto:support@auditflow.com" className="text-primary hover:underline">
-                support@auditflow.com
-              </a>
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -119,13 +119,13 @@ export function ContentGallery() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm text-primary mb-6">
             <Sparkles className="h-4 w-4" />
-            <span>AI-Powered Content Creation</span>
+            <span>Personal Brand Insights</span>
           </div>
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            Create Content That <span className="gradient-text">Converts</span>
+            Uncover Your Brand <span className="gradient-text">Potential</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Join thousands of brands using our platform to create, schedule, and publish viral content
+            Join hundreds of creators and professionals who've transformed their personal brand with data-driven insights
           </p>
         </div>
 
