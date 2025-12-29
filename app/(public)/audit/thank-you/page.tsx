@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -10,7 +10,7 @@ import { createClient } from "@/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
 
-export default function AuditThankYouPage() {
+function ThankYouContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
@@ -141,5 +141,20 @@ export default function AuditThankYouPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function AuditThankYouPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    }>
+      <ThankYouContent />
+    </Suspense>
   );
 }
