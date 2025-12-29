@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Plus, Search, Filter, Loader2 } from 'lucide-react';
 import { STATUS_COLORS } from '@/constants/constants';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { loadContent, selectContent, selectContentLoading } from '@/store/slices/contentSlice';
 import { useState } from 'react';

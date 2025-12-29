@@ -1,8 +1,7 @@
 import {createSlice,createAsyncThunk,PayloadAction} from "@reduxjs/toolkit";
 import {User} from '@supabase/supabase-js';
 import { AuthService,AppRole } from "@/services/authService"; 
-import { createClient } from "@/supabase/client";
-import Auth from "@/pages-old/Auth";
+import { createClient } from "@/supabase/client"; 
 interface AuthState{
     user: User|null;
     roles:AppRole[];
@@ -32,6 +31,7 @@ export const initializeAuth=createAsyncThunk(
     async()=>{
         const supabase=createClient();
         const session=await AuthService.getCurrentSession(supabase);
+        return session;
     }
 );
 
