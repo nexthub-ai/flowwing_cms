@@ -113,6 +113,12 @@ export class StripeService {
         type: 'audit_payment',
         audit_id: auditId,
       },
+      payment_intent_data: {
+        metadata: {
+          type: 'audit_payment',
+          audit_id: auditId,
+        },
+      },
     });
 
     return {

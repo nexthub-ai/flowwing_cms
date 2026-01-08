@@ -9,21 +9,21 @@ const contentExamples = [
     gradient: "from-slate-900 via-slate-800 to-slate-900",
     author: "Sarah Chen",
     handle: "@sarahchen",
-    quote: "Take advice from people who have receipts, not just opinions.",
+    quote: "The audit revealed blind spots I never knew existed. My brand clarity improved overnight.",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
   },
   {
     type: "stats",
     gradient: "from-blue-500 via-indigo-500 to-purple-600",
-    title: "340%",
-    subtitle: "Engagement Increase",
+    title: "85/100",
+    subtitle: "Avg. Brand Score",
     bgImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=600&fit=crop",
   },
   {
     type: "stats",
     gradient: "from-orange-500 via-red-500 to-rose-600",
-    title: "10x",
-    subtitle: "Faster Content",
+    title: "2,500+",
+    subtitle: "Audits Completed",
     bgImage: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=600&fit=crop",
   },
   {
@@ -31,21 +31,21 @@ const contentExamples = [
     gradient: "from-emerald-600 via-green-600 to-teal-700",
     author: "Marcus J.",
     handle: "@marcusj",
-    quote: "The best CMS for social media teams. Period.",
+    quote: "This audit gave me a clear roadmap to strengthen my personal brand across all platforms.",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
   },
   {
     type: "stats",
     gradient: "from-pink-500 via-rose-500 to-fuchsia-600",
-    title: "50M+",
-    subtitle: "Impressions",
+    title: "12+",
+    subtitle: "Actionable Insights",
     bgImage: "https://images.unsplash.com/photo-1557838923-2985c318be48?w=400&h=600&fit=crop",
   },
   {
     type: "stats",
     gradient: "from-violet-600 via-purple-600 to-indigo-700",
-    title: "2500+",
-    subtitle: "Posts Created",
+    title: "48hrs",
+    subtitle: "Audit Delivery",
     bgImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=600&fit=crop",
   },
   {
@@ -53,14 +53,14 @@ const contentExamples = [
     gradient: "from-cyan-600 via-blue-600 to-indigo-700",
     author: "Alex T.",
     handle: "@alext",
-    quote: "Finally, a tool that understands content creators.",
+    quote: "Finally got the honest feedback I needed. The comprehensive analysis was worth every penny.",
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop",
   },
   {
     type: "stats",
     gradient: "from-amber-500 via-yellow-500 to-orange-600",
     title: "98%",
-    subtitle: "Client Satisfaction",
+    subtitle: "Would Recommend",
     bgImage: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=600&fit=crop",
   },
 ];
@@ -125,7 +125,7 @@ export function ContentGallery() {
             Uncover Your Brand <span className="gradient-text">Potential</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Join hundreds of creators and professionals who've transformed their personal brand with data-driven insights
+            Join hundreds of creators and professionals who've elevated their personal brand with our comprehensive audit tool
           </p>
         </div>
 
@@ -188,10 +188,10 @@ export function ContentGallery() {
         {/* Feature pills */}
         <div className="flex flex-wrap justify-center gap-4 mt-8">
           {[
-            { icon: Calendar, label: "Smart Scheduling" },
-            { icon: Users, label: "Team Collaboration" },
-            { icon: BarChart3, label: "Analytics" },
-            { icon: Zap, label: "AI Generation" },
+            { icon: BarChart3, label: "Brand Analysis" },
+            { icon: Zap, label: "AI-Powered Insights" },
+            { icon: Users, label: "Competitor Benchmarking" },
+            { icon: Calendar, label: "48-Hour Delivery" },
           ].map((feature) => (
             <div
               key={feature.label}

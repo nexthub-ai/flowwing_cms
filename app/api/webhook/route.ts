@@ -31,6 +31,8 @@ export async function POST(req: NextRequest) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         console.log('[STRIPE-WEBHOOK] Checkout completed:', session.id);
+        console.log('[STRIPE-WEBHOOK] Session metadata:', session.metadata);
+        console.log('[STRIPE-WEBHOOK] Payment intent:', session.payment_intent);
 
         // Check if this is an audit payment
         if (
@@ -38,25 +40,34 @@ export async function POST(req: NextRequest) {
           session.metadata?.audit_id
         ) {
           const auditId = session.metadata.audit_id;
+          const paymentIntentId = typeof session.payment_intent === 'string' 
+            ? session.payment_intent 
+            : session.payment_intent?.id;
+
+          console.log('[STRIPE-WEBHOOK] Processing audit payment:', { auditId, paymentIntentId });
 
           // Update audit signup with payment info
-          const { error: updateError } = await supabase
+          const { data: updateData, error: updateError } = await supabase
             .from('audit_signups')
             .update({
               status: 'payment_received',
-              stripe_payment_id: session.payment_intent as string,
+              stripe_payment_id: paymentIntentId,
               updated_at: new Date().toISOString(),
             })
-            .eq('id', auditId);
+            .eq('id', auditId)
+            .select();
 
           if (updateError) {
             console.error('[STRIPE-WEBHOOK] Error updating audit:', updateError);
             throw updateError;
           }
 
-          console.log('[STRIPE-WEBHOOK] Audit updated with payment:', {
-            auditId,
-            paymentIntent: session.payment_intent,
+          console.log('[STRIPE-WEBHOOK] Audit updated successfully:', updateData);
+        } else {
+          console.warn('[STRIPE-WEBHOOK] Missing metadata for audit payment:', {
+            hasType: !!session.metadata?.type,
+            hasAuditId: !!session.metadata?.audit_id,
+            metadata: session.metadata,
           });
         }
         break;
