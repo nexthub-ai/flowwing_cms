@@ -9,42 +9,42 @@ const testimonials = [
     role: "Founder, Dan Web Develop",
     avatar: "DO",
     rating: 5,
-    content: "As a social media professional and content strategist, this platform has completely transformed how I manage my clients. The AI suggestions are incredibly accurate and save me hours every week.",
+    content: "The brand audit revealed critical gaps in my online presence I hadn't noticed. The detailed analysis and actionable recommendations helped me reposition my agency and attract better clients within weeks.",
   },
   {
     name: "JASON SCHOULTZ",
     role: "Khwezi Holdings (Pty) Ltd",
     avatar: "JS",
     rating: 5,
-    content: "This platform has truly revolutionized our social media workflow. The scheduling features and team collaboration tools have made our content production 10x more efficient.",
+    content: "This audit gave us clarity on our brand messaging across platforms. The competitor benchmarking section was eye-opening and helped us differentiate ourselves in a crowded market.",
   },
   {
     name: "RAHIM HIRJI",
     role: "Founder - Box of Amazing",
     avatar: "RH",
     rating: 5,
-    content: "I have been writing my newsletter (Box of Amazing) for eight years covering emerging technology and trends, going from 0 to 50,000 subscribers. This tool helped me repurpose that content across all social platforms effortlessly.",
+    content: "After building my newsletter to 50,000 subscribers, I wanted to strengthen my personal brand. The audit identified untapped opportunities and gave me a clear roadmap to increase my influence across all channels.",
   },
   {
     name: "LEBORAH M SPENCER",
     role: "Inner Wellness Consultant",
     avatar: "LM",
     rating: 5,
-    content: "My name is Leborah M Spencer and I've been using this platform for my wellness coaching business. The content templates and AI writing assistant have helped me maintain a consistent brand voice across all channels.",
+    content: "The personal brand audit transformed how I present my wellness coaching business. The insights on visual consistency and messaging helped me attract my ideal clients and establish real authority in my niche.",
   },
   {
     name: "MARCUS CHEN",
     role: "CEO, TechStartup Inc",
     avatar: "MC",
     rating: 5,
-    content: "We switched from three different tools to just this one platform. The ROI was immediate - our social engagement increased by 340% in the first quarter alone.",
+    content: "We invested in this audit before launching our Series A campaign. The brand score and detailed feedback helped us polish our founder's LinkedIn presence, resulting in 3x more investor inquiries.",
   },
   {
     name: "AMANDA FOSTER",
     role: "Agency Director",
     avatar: "AF",
     rating: 5,
-    content: "Managing 15 client accounts used to be a nightmare. Now with the multi-workspace feature and approval workflows, my team can handle twice the workload with half the stress.",
+    content: "I now recommend this brand audit to all my clients before we start any social media work. It provides the foundation we need to create authentic, strategic content that actually resonates with their audience.",
   },
 ];
 
@@ -94,7 +94,7 @@ export function TestimonialsEnhanced() {
             Testimonials
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Join thousands of satisfied content creators and marketing teams
+            Join thousands who've transformed their personal brand with our comprehensive audit
           </p>
         </div>
 
