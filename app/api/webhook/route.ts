@@ -8,12 +8,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
+// Disable Next.js body parsing - Stripe needs raw body for signature verification
+export const runtime = 'nodejs';
+
 export async function POST(req: NextRequest) {
   // Use service role client for webhook
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
+  
+  // Get raw body as text for Stripe signature verification
   const body = await req.text();
   const signature = req.headers.get('stripe-signature');
 
@@ -22,10 +27,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'No signature' }, { status: 400 });
   }
 
-  try {
-    const event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+  if (!webhookSecret) {
+    console.error('[STRIPE-WEBHOOK] Webhook secret not configured');
+    return NextResponse.json({ error: 'Webhook secret not configured' }, { status: 500 });
+  }
 
-    console.log('[STRIPE-WEBHOOK] Event received:', event.type);
+  let event: Stripe.Event;
+
+  try {
+    // Verify webhook signature and construct event
+    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    console.log('[STRIPE-WEBHOOK] Event verified:', event.type);
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    console.error('[STRIPE-WEBHOOK] Signature verification failed:', errorMessage);
+    return NextResponse.json({ 
+      error: `Webhook signature verification failed: ${errorMessage}` 
+    }, { status: 400 });
+  }
+
+  try {
 
     switch (event.type) {
       case 'checkout.session.completed': {
