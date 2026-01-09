@@ -1,75 +1,123 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
-import Link from "next/link";
+'use client';
 
-const benefits = [
-  "AI-Powered Insights",
-  "Actionable Recommendations",
-  "Complete Brand Analysis",
-];
+import { Button } from "@/components/ui/button";
+import { ArrowRight, CheckCircle2, TrendingUp, Target, Star, Users, Shield } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 bg-gradient-to-b from-slate-950 via-slate-900 to-background">
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-500/10 via-purple-500/5 to-transparent" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+    <section className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Simplified Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary/20" />
       
-      <div className="container relative z-10 px-6 py-24">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 border border-border/50 text-sm text-muted-foreground mb-8 animate-fade-up opacity-0">
-            <Sparkles className="h-4 w-4 text-primary" />
-            <span>Limited Time Offer</span>
-          </div>
-
-          {/* Heading */}
-          <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight mb-6 animate-fade-up opacity-0 stagger-1">
-            Audit Your{" "}
-            <span className="gradient-text">Personal Brand</span>
-          </h1>
-
-          {/* Subheading */}
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-8 animate-fade-up opacity-0 stagger-2">
-            Get a comprehensive AI-powered audit of your personal brand across all social platforms with actionable insights to grow your influence.
-          </p>
-
-          {/* Price */}
-          <div className="flex items-center justify-center gap-3 mb-8 animate-fade-up opacity-0 stagger-3">
-            <span className="text-4xl md:text-5xl font-display font-bold text-foreground">$100</span>
-            <span className="text-muted-foreground">one-time</span>
-          </div>
-
-          {/* Benefits */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-10 animate-fade-up opacity-0 stagger-4">
-            {benefits.map((benefit) => (
-              <div
-                key={benefit}
-                className="flex items-center gap-2 text-sm text-muted-foreground"
-              >
-                <CheckCircle2 className="h-4 w-4 text-success" />
-                <span>{benefit}</span>
+      <div className="container relative z-10 py-32">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-[0.6fr_1.8fr_0.6fr] gap-8 items-center">
+            
+            {/* Left Image */}
+            <div className="relative hidden lg:block">
+              <div className="relative h-[400px] overflow-hidden opacity-40">
+                <Image
+                  src="/banner.png"
+                  alt="Brand Analysis"
+                  fill
+                  className="object-cover object-left"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background" />
               </div>
-            ))}
-          </div>
+            </div>
 
-          {/* CTA */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up opacity-0 stagger-5">
-            <Link href="/audit/start">
-              <Button variant="hero" size="xl" className="group">
-                Start Your Audit
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </Link>
-            <a href="#pricing">
-              <Button variant="glass" size="xl">
-                View Pricing
-              </Button>
-            </a>
-          </div>
+            {/* Center Column - Content */}
+            <div className="space-y-8 text-center">
+              {/* Badge - More Subtle */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-xs font-medium text-white">
+                <Shield className="h-3 w-3" />
+                <span>Professional Brand Audit</span>
+              </div>
+
+              {/* Heading - Better Typography */}
+              <div className="space-y-4">
+                <h1 className="font-display text-5xl sm:text-6xl lg:text-6xl font-bold tracking-tight leading-[1.1]">
+                  Get Clear Content
+                  <span className="block mt-2 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+                    Diagnosis
+                  </span>
+                </h1>
+                <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                  Understand what's blocking growth, what works, and what needs fixing —
+                  <span className="text-foreground/90"> with actionable insights delivered in 48 hours.</span>
+                </p>
+              </div>
+
+              {/* CTA Section - Redesigned */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link href="/audit/start" className="w-full sm:w-auto">
+                  <Button 
+                    size="lg" 
+                    className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-8 h-12 text-base font-medium group"
+                  >
+                    Start Your Audit — $100
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Human Credibility Anchor */}
+              <p className="text-sm text-muted-foreground/80 italic">
+                Each audit is reviewed and refined before delivery.
+              </p>
+
+              {/* Trust Indicators - Cleaner */}
+              <div className="flex flex-wrap items-center justify-center gap-6 pt-2">
+                <div className="flex items-center gap-2">
+                  <div className="flex -space-x-2">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 border-2 border-background" />
+                    ))}
+                  </div>
+                  <span className="text-sm text-muted-foreground">2,500+ audits completed</span>
+                </div>
+                <div className="h-4 w-px bg-border" />
+                <div className="flex items-center gap-1.5">
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-3.5 w-3.5 fill-primary/80 text-primary/80" />
+                    ))}
+                  </div>
+                  <span className="text-sm text-muted-foreground">4.9 rating</span>
+                </div>
+              </div> 
+            </div>
+
+            {/* Right Image */}
+            <div className="relative hidden lg:block">
+              <div className="relative h-[400px] overflow-hidden opacity-40">
+                <Image
+                  src="/heroImage2.jpg"
+                  alt="Brand Analysis"
+                  fill
+                  className="object-cover object-right"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-l from-transparent to-background" />
+              </div>
+            </div>
+
+          </div> 
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-15px); }
+        }
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+      `}</style>
     </section>
   );
 }
