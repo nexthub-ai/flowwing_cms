@@ -6,7 +6,7 @@ CREATE TABLE public.audit_signups (
   email text NOT NULL,
   company_name text,
   social_handles jsonb,
-  status text NOT NULL DEFAULT 'pending'::text CHECK (status = ANY (ARRAY['pending'::text, 'planning'::text, 'in_progress'::text, 'review'::text, 'completed'::text])),
+  status text NOT NULL DEFAULT 'pending'::text CHECK (status = ANY (ARRAY['pending'::text, 'payment_received'::text, 'payment_failed'::text, 'planning'::text, 'in_progress'::text, 'review'::text, 'completed'::text])),
   assigned_to uuid,
   notes text,
   stripe_payment_id text,

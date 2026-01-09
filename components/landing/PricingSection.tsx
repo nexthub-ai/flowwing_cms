@@ -9,19 +9,20 @@ import { useAppSelector } from "@/store/hooks";
 import { selectUser } from "@/store/slices/authSlice";
 
 const auditPlan = {
-  name: "Personal Brand Audit",
-  description: "Comprehensive analysis of your personal brand's online presence",
+  name: "Brand Clarity Audit",
+  description: "Get clarity on what's working and what to fix — delivered in 48 hours",
   price: 100,
   priceId: "price_1SfyJSHUoeVfz3ns8g2wiPbH",
   productId: "prod_TdEnG2HqLyNSdz",
   features: [
-    "Full personal brand audit",
-    "Cross-platform analysis",
-    "Content performance review",
-    "Audience insights report",
-    "Personal brand positioning recommendations",
-    "30-page detailed report",
-    "1-hour strategy call",
+    "Comprehensive brand positioning analysis",
+    "Content strengths & weaknesses breakdown",
+    "Growth blocker identification",
+    "Competitor benchmarking insights",
+    "Platform-specific recommendations",
+    "Prioritized action plan",
+    "Delivered in 48 hours",
+    "Expert review + analysis",
   ],
 };
 
@@ -76,15 +77,15 @@ export function PricingSection() {
 
       <div className="container relative z-10 px-6">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 text-sm text-accent mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm text-white mb-6">
             <Sparkles className="h-4 w-4" />
-            <span>Get Started</span>
+            <span>Simple, One-Time Investment</span>
           </div>
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            Personal Brand <span className="gradient-text">Audit</span>
+            Start With <span className="gradient-text">Clarity</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Get a comprehensive analysis of your personal brand presence across all platforms with actionable recommendations
+            One comprehensive audit. Clear insights. Actionable next steps. No subscriptions.
           </p>
         </div>
 

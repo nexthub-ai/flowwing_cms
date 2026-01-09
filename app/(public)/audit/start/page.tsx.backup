@@ -1,0 +1,443 @@
+'use client';
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/components/ui/use-toast";
+import Image from "next/image";
+import Link from "next/link";
+import { 
+  Instagram, Youtube, Music2, Globe, Mail, Building2, 
+  ArrowRight, Loader2, Linkedin, Twitter
+} from "lucide-react";
+
+export default function AuditStartPage() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [formData, setFormData] = useState({
+    company_name: "",
+    email: "",
+    instagram: "",
+    tiktok: "",
+    youtube: "",
+    linkedin: "",
+    twitter: "",
+    website: "",
+  });
+
+  // Validate URL format
+  const validateUrl = (url: string, type: string) => {
+    if (!url) return true; // Empty is valid (optional fields)
+    const patterns = {
+      instagram: /^https?:\/\/(www\.)?(instagram\.com|instagr\.am)\/.+$/i,
+      tiktok: /^https?:\/\/(www\.)?tiktok\.com\/.+$/i,
+      youtube: /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/.+$/i,
+      linkedin: /^https?:\/\/(www\.)?linkedin\.com\/in\/.+$/i,
+      twitter: /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/.+$/i,
+      website: /^https?:\/\/.+$/i,
+    };
+    return patterns[type as keyof typeof patterns]?.test(url) ?? true;
+  };
+
+  // Check if at least one social account is provided
+  const hasAtLeastOneSocial = formData.instagram || formData.tiktok || formData.youtube || 
+                               formData.linkedin || formData.twitter;
+
+  // Check if all provided URLs are valid
+  const allUrlsValid = 
+    validateUrl(formData.instagram, 'instagram') &&
+    validateUrl(formData.tiktok, 'tiktok') &&
+    validateUrl(formData.youtube, 'youtube') &&
+    validateUrl(formData.linkedin, 'linkedin') &&
+    validateUrl(formData.twitter, 'twitter') &&
+    validateUrl(formData.website, 'website');
+
+  // Check if form is valid
+  const isFormValid = 
+    formData.company_name.trim() !== "" &&
+    formData.email.trim() !== "" &&
+    hasAtLeastOneSocial &&
+    allUrlsValid &&
+    agreedToTerms;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate at least one social media account
+    if (!formData.instagram && !formData.tiktok && !formData.youtube && !formData.linkedin && !formData.twitter) {
+      toast({
+        title: "Social Account Required",
+        description: "Please provide at least one social media profile URL.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate URL format for provided accounts (only if filled)
+    const urlValidation = [
+      { value: formData.instagram, name: "Instagram", pattern: /^https?:\/\/(www\.)?(instagram\.com|instagr\.am)\/.+$/i },
+      { value: formData.tiktok, name: "TikTok", pattern: /^https?:\/\/(www\.)?tiktok\.com\/.+$/i },
+      { value: formData.youtube, name: "YouTube", pattern: /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/.+$/i },
+      { value: formData.linkedin, name: "LinkedIn", pattern: /^https?:\/\/(www\.)?linkedin\.com\/in\/.+$/i },
+      { value: formData.twitter, name: "Twitter/X", pattern: /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/.+$/i },
+      { value: formData.website, name: "Website", pattern: /^https?:\/\/.+$/i },
+    ];
+
+    for (const { value, name, pattern } of urlValidation) {
+      if (value && !pattern.test(value)) {
+        toast({
+          title: "Invalid URL",
+          description: `Please provide a valid ${name} URL (e.g., ${name === "Website" ? "https://example.com" : "include full URL with https://"})`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
+    // Validate terms acceptance
+    if (!agreedToTerms) {
+      toast({
+        title: "Terms Required",
+        description: "Please accept the terms and conditions to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsLoading(true);
+
+    try {
+      // Call Next.js API route to create checkout and save audit data
+      const response = await fetch('/api/audit-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          company_name: formData.company_name,
+          social_handles: {
+            instagram: formData.instagram,
+            tiktok: formData.tiktok,
+            youtube: formData.youtube,
+            linkedin: formData.linkedin,
+            twitter: formData.twitter,
+            website: formData.website,
+          },
+        }),
+      });
+
+      const { url, error } = await response.json();
+
+      if (error) throw new Error(error);
+
+      if (url) {
+        // Redirect to Stripe Checkout
+        window.location.href = url;
+      } else {
+        throw new Error("Checkout URL not available");
+      }
+    } catch (error: any) {
+      console.error("Error creating checkout:", error);
+      toast({
+        title: "Checkout Failed",
+        description: error.message || "Unable to process payment. Please try again.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+    }
+    // Note: Don't set isLoading to false here as we're redirecting
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar showAuth={false} />
+      <main className="pt-24 pb-12">
+        <div className="container px-6">
+          <div className="max-w-3xl mx-auto">
+            {/* Header */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center align-middle justify-center gap-1 mb-6">
+                <Image 
+                  src="/logo.svg" 
+                  alt="FlowWing Audit" 
+                  width={60} 
+                  height={60}
+                  className="drop-shadow-lg"
+                />
+             
+              <h1 className="font-display text-4xl md:text-5xl font-bold ">
+                Personal Brand Audit
+              </h1> 
+              </div>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Get a comprehensive analysis of your personal brand across all platforms with actionable 
+                recommendations to grow your influence.
+              </p>
+            </div> 
+
+            {/* Form */}
+            <div className="p-8 rounded-2xl border border-border/50 bg-card shadow-xl">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Company Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="company_name" className="flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-primary" />
+                    Company or Brand Name *
+                  </Label>
+                  <Input
+                    id="company_name"
+                    required
+                    placeholder="Your Brand Name"
+                    value={formData.company_name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, company_name: e.target.value })
+                    }
+                    className="bg-secondary/50"
+                  />
+                </div>
+
+                {/* Email */}
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-primary" />
+                    Email Address *
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    required
+                    placeholder="you@company.com"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    className="bg-secondary/50"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    We'll send your audit report to this email
+                  </p>
+                </div>
+
+                <div className="border-t border-border/50 pt-6">
+                  <h3 className="font-semibold mb-4">Your Social Accounts</h3>
+                  <div className="grid gap-4">
+                    {/* Instagram */}
+                    <div className="space-y-2">
+                      <Label htmlFor="instagram" className="flex items-center gap-2">
+                        <Instagram className="h-4 w-4 text-pink-500" />
+                        Instagram
+                      </Label>
+                      <Input
+                        id="instagram"
+                        placeholder="https://instagram.com/yourusername"
+                        value={formData.instagram}
+                        onChange={(e) =>
+                          setFormData({ ...formData, instagram: e.target.value })
+                        }
+                        className={`bg-secondary/50 ${formData.instagram && !validateUrl(formData.instagram, 'instagram') ? 'border-destructive' : ''}`}
+                      />
+                      {formData.instagram && !validateUrl(formData.instagram, 'instagram') && (
+                        <p className="text-xs text-destructive">Please enter a valid Instagram URL</p>
+                      )}
+                    </div>
+
+                    {/* TikTok */}
+                    <div className="space-y-2">
+                      <Label htmlFor="tiktok" className="flex items-center gap-2">
+                        <Music2 className="h-4 w-4" />
+                        TikTok
+                      </Label>
+                      <Input
+                        id="tiktok"
+                        placeholder="https://tiktok.com/@yourusername"
+                        value={formData.tiktok}
+                        onChange={(e) =>
+                          setFormData({ ...formData, tiktok: e.target.value })
+                        }
+                        className={`bg-secondary/50 ${formData.tiktok && !validateUrl(formData.tiktok, 'tiktok') ? 'border-destructive' : ''}`}
+                      />
+                      {formData.tiktok && !validateUrl(formData.tiktok, 'tiktok') && (
+                        <p className="text-xs text-destructive">Please enter a valid TikTok URL</p>
+                      )}
+                    </div>
+
+                    {/* YouTube */}
+                    <div className="space-y-2">
+                      <Label htmlFor="youtube" className="flex items-center gap-2">
+                        <Youtube className="h-4 w-4 text-red-500" />
+                        YouTube
+                      </Label>
+                      <Input
+                        id="youtube"
+                        placeholder="https://youtube.com/@yourchannel"
+                        value={formData.youtube}
+                        onChange={{`bg-secondary/50 ${formData.youtube && !validateUrl(formData.youtube, 'youtube') ? 'border-destructive' : ''}`}
+                      />
+                      {formData.youtube && !validateUrl(formData.youtube, 'youtube') && (
+                        <p className="text-xs text-destructive">Please enter a valid YouTube URL</p>
+                      )}  setFormData({ ...formData, youtube: e.target.value })
+                        }
+                        className="bg-secondary/50"
+                      />
+                    </div>
+
+                    {/* LinkedIn */}
+                    <div className="space-y-2">
+                      <Label htmlFor="linkedin" className="flex items-center gap-2">
+                        <Linkedin className="h-4 w-4 text-blue-600" />
+                        LinkedIn
+                      </Label>
+                      <Input
+                        id="linked{`bg-secondary/50 ${formData.linkedin && !validateUrl(formData.linkedin, 'linkedin') ? 'border-destructive' : ''}`}
+                      />
+                      {formData.linkedin && !validateUrl(formData.linkedin, 'linkedin') && (
+                        <p className="text-xs text-destructive">Please enter a valid LinkedIn URL</p>
+                      )}placeholder="https://linkedin.com/in/yourprofile"
+                        value={formData.linkedin}
+                        onChange={(e) =>
+                          setFormData({ ...formData, linkedin: e.target.value })
+                        }
+                        className="bg-secondary/50"
+                      />
+                    </div>
+
+                    {/* Twitter */}
+                    <div className="space-y-2">
+                      <Label htmlFor="twitter" className="flex items-center gap-2">
+                        <Twitter className="h-4 w-4 text-sky-500" />
+                        Twitter / X
+                      </Label>
+                      <Input
+                        id="twitte{`bg-secondary/50 ${formData.twitter && !validateUrl(formData.twitter, 'twitter') ? 'border-destructive' : ''}`}
+                      />
+                      {formData.twitter && !validateUrl(formData.twitter, 'twitter') && (
+                        <p className="text-xs text-destructive">Please enter a valid Twitter/X URL</p>
+                      )}placeholder="https://twitter.com/yourusername or https://x.com/yourusername"
+                        value={formData.twitter}
+                        onChange={(e) =>
+                          setFormData({ ...formData, twitter: e.target.value })
+                        }
+                        className="bg-secondary/50"
+                      />
+                    </div>
+
+                    {/* Website */}
+                    <div className="space-y-2">
+                      <Label htmlFor="website" className="flex items-center gap-2">
+                        <Globe className="h-4 w-4 text-primary" />
+                        Website (optional)
+                      </Label>
+                      <Input
+                        id="websit{`bg-secondary/50 ${formData.website && !validateUrl(formData.website, 'website') ? 'border-destructive' : ''}`}
+                      />
+                      {formData.website && !validateUrl(formData.website, 'website') && (
+                        <p className="text-xs text-destructive">Please enter a valid website URL</p>
+                      )}placeholder="https://yourbrand.com"
+                   div className={`text-sm mt-4 p-3 rounded-lg ${hasAtLeastOneSocial ? 'bg-success/10 text-success border border-success/20' : 'bg-warning/10 text-warning border border-warning/20'}`}>
+                    {hasAtLeastOneSocial ? (
+                      <span className="flex items-center gap-2">
+                        ✓ Social media account provided
+                      </span>
+                    ) : (
+                      <span>* Provide at least one social media profile for the audit</span>
+                    )}
+                  </div     setFormData({ ...formData, website: e.target.value })
+                        }
+                        className="bg-secondary/50"
+                      />
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-muted-foreground mt-4">
+                    * Provide at least one social media profile for the audit
+                  </p>
+                </div>
+
+                {/* Price Summary */}
+                {/* Terms and Conditions */}
+                <div className="flex items-start gap-3 p-4 rounded-lg border border-border/50 bg-secondary/30">
+                  <Checkbox
+                    id="terms"
+                    checked={agreedToTerms}
+                    onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <Label
+                      htmlFor="terms"
+                      className="text-sm font-normal cursor-pointer leading-relaxed"
+                    >
+                      I agree to the{" "}
+                      <Link 
+                        href="/terms" 
+                        target="_blank"
+                        className="text-primary hover:underline font-medium"
+                      >
+                        Terms and Conditions
+                      </Link>
+                      {" "}and{" "}
+                      <Link 
+                        href="/privacy" 
+                        target="_blank"
+                        className="text-primary hover:underline font-medium"
+                      >!isFormValid || isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      Start My Audit — $100
+                      <ArrowRight className="h-5 w-5" />
+                    </>
+                  )}
+                </Button>
+                
+                {!isFormValid && !isLoading && (
+                  <div className="text-sm text-center text-muted-foreground">
+                    {!formData.company_name.trim() || !formData.email.trim() ? (
+                      <span>Please fill in all required fields</span>
+                    ) : !hasAtLeastOneSocial ? (
+                      <span>Please provide at least one social media account</span>
+                    ) : !allUrlsValid ? (
+                      <span>Please fix invalid URLs</span>
+                    ) : !agreedToTerms ? (
+                      <span>Please accept the terms and conditions</span>
+                    ) : null}
+                  </div>
+                )}
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      Start My Audit
+                      <ArrowRight className="h-5 w-5" />
+                    </>
+                  )}
+                </Button>
+
+                <p className="text-xs text-center text-muted-foreground">
+                  By submitting, you agree to receive your audit report via email.
+                </p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
