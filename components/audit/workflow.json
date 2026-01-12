@@ -1,0 +1,134 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cloudinary.com/v1_1/dtiwzszj5/raw/upload",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "public_id",
+              "value": "={{ $('Generate Cloudinary Signature').item.json.public_id }}"
+            },
+            {
+              "name": "api_key",
+              "value": "676942194382432"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $('Generate Cloudinary Signature').item.json.timestamp }}"
+            },
+            {
+              "name": "signature",
+              "value": "={{ $('Generate Cloudinary Signature').item.json.signature }}"
+            },
+            {
+              "name": "folder",
+              "value": "={{ $('Generate Cloudinary Signature').item.json.folder }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        4560,
+        3616
+      ],
+      "id": "d2ab7e4e-4426-4985-9187-66104596f9a9",
+      "name": "Cloudinary upload (PDF)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const upload = items[0].json;\n\n// Cloudinary secure_url from upload response\nconst secureUrl = upload.secure_url;\n\n// Force public download for RAW files\nconst publicDownloadUrl = secureUrl.replace(\n  '/raw/upload/',\n  '/raw/upload/fl_attachment/'\n);\n\nreturn [\n  {\n    json: {\n      cloudinary_public_url: publicDownloadUrl,\n      cloudinary_secure_url: secureUrl,\n      bytes: upload.bytes,\n      public_id: upload.public_id,\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4784,
+        3616
+      ],
+      "id": "b380bf51-d63d-46d4-9983-14a7b2b82728",
+      "name": "Build Public Delivery URL"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "audit_runs",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('Fetch Audit Run').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "report_url",
+              "fieldValue": "={{ $json.cloudinary_public_url }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        5008,
+        3616
+      ],
+      "id": "1347f939-7a6a-4574-89ea-ee248f4b5d61",
+      "name": "Save audit_runs.report_url",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YiL3n4ncLItuuU1h",
+          "name": "cms"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cloudinary upload (PDF)": {
+      "main": [
+        [
+          {
+            "node": "Build Public Delivery URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Public Delivery URL": {
+      "main": [
+        [
+          {
+            "node": "Save audit_runs.report_url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save audit_runs.report_url": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f5ab71bfdb933b81ac81f4c9fcb13b20727c1be1f107f4072fe9f213297f9797"
+  }
+}

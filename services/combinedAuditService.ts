@@ -7,6 +7,7 @@ export interface CombinedAuditData {
   review_id: string | null;
   brand_name: string | null;
   email: string;
+  social_handles: Record<string, string> | null;
   run_status: 'in_progress' | 'review' | 'delivered' | null;
   report_url: string | null;
   review_url: string | null;
@@ -45,6 +46,7 @@ export class CombinedAuditService {
           review_id: review?.id || null,
           brand_name: signup.company_name,
           email: signup.email,
+          social_handles: signup.social_handles || null,
           run_status: (run?.status as 'in_progress' | 'review' | 'delivered') || null,
           report_url: run?.report_url || null,
           review_url: run?.review_url || null,

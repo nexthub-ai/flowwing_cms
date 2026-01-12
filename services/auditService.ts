@@ -1,9 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { AUDIT_STATUS, AuditStatus } from '@/constants/constants';
 
-/**
- * Audit Signup interface
- */
+
 export interface AuditSignup {
   id: string;
   user_id: string | null;
@@ -18,9 +16,7 @@ export interface AuditSignup {
   updated_at: string;
 }
 
-/**
- * Audit Run interface
- */
+
 export interface AuditRun {
   id: string;
   audit_signup_id: string;
@@ -33,9 +29,6 @@ export interface AuditRun {
   created_at: string;
 }
 
-/**
- * Audit Brand Review interface
- */
 export interface AuditBrandReview {
   id: string;
   audit_run_id: string;
@@ -52,9 +45,7 @@ export interface AuditBrandReview {
   created_at: string;
 }
 
-/**
- * Audit statistics by status
- */
+
 export interface AuditStats {
   [AUDIT_STATUS.PENDING]: number;
   [AUDIT_STATUS.PLANNING]: number;
@@ -63,14 +54,9 @@ export interface AuditStats {
   [AUDIT_STATUS.COMPLETED]: number;
 }
 
-/**
- * Service for audit operations
- * Follows clean architecture: Component → Service → Database
- */
+
 export class AuditService {
-  /**
-   * Fetch audit signups with optional status filter
-   */
+ 
   static async getAuditSignups(
     supabase: SupabaseClient,
     status?: AuditStatus
@@ -95,9 +81,7 @@ export class AuditService {
     }
   }
 
-  /**
-   * Get count of audits by status
-   */
+
   static async getAuditStats(supabase: SupabaseClient): Promise<AuditStats> {
     try {
       const { data, error } = await supabase
@@ -129,9 +113,7 @@ export class AuditService {
     }
   }
 
-  /**
-   * Update audit status
-   */
+
   static async updateAuditStatus(
     supabase: SupabaseClient,
     id: string,
@@ -153,9 +135,7 @@ export class AuditService {
     }
   }
 
-  /**
-   * Get a single audit by ID
-   */
+
   static async getAuditById(
     supabase: SupabaseClient,
     id: string
@@ -175,9 +155,7 @@ export class AuditService {
     }
   }
 
-  /**
-   * Get all audit runs
-   */
+
   static async getAllAuditRuns(
     supabase: SupabaseClient
   ): Promise<AuditRun[]> {
@@ -195,9 +173,7 @@ export class AuditService {
     }
   }
 
-  /**
-   * Get audit runs for a specific signup
-   */
+ 
   static async getAuditRunsBySignupId(
     supabase: SupabaseClient,
     signupId: string
@@ -256,6 +232,116 @@ export class AuditService {
     } catch (error) {
       console.error('Failed to fetch brand review:', error);
       return null;
+    }
+  }
+ 
+  static async getAuditRunById(
+    supabase: SupabaseClient,
+    runId: string
+  ): Promise<AuditRun | null> {
+    try {
+      const { data, error } = await supabase
+        .from('audit_runs')
+        .select('*')
+        .eq('id', runId)
+        .single();
+
+      if (error) throw error;
+      return data as AuditRun;
+    } catch (error) {
+      console.error('Failed to fetch audit run:', error);
+      return null;
+    }
+  }
+ 
+  static async updateReportUrl(
+    supabase: SupabaseClient,
+    runId: string,
+    reportUrl: string
+  ): Promise<AuditRun> {
+    try {
+      const { data, error } = await supabase
+        .from('audit_runs')
+        .update({
+          report_url: reportUrl
+        })
+        .eq('id', runId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as AuditRun;
+    } catch (error) {
+      console.error('Failed to update report URL:', error);
+      throw error;
+    }
+  }
+ 
+  static async markRunDelivered(
+    supabase: SupabaseClient,
+    runId: string
+  ): Promise<AuditRun> {
+    try {
+      const { data, error } = await supabase
+        .from('audit_runs')
+        .update({
+          status: 'delivered',
+          completed_at: new Date().toISOString(),
+          delivered_at: new Date().toISOString()
+        })
+        .eq('id', runId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as AuditRun;
+    } catch (error) {
+      console.error('Failed to mark run as delivered:', error);
+      throw error;
+    }
+  }
+ 
+  static async markSignupDelivered(
+    supabase: SupabaseClient,
+    signupId: string
+  ): Promise<AuditSignup> {
+    try {
+      const { data, error } = await supabase
+        .from('audit_signups')
+        .update({
+          status: 'delivered',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', signupId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as AuditSignup;
+    } catch (error) {
+      console.error('Failed to mark signup as delivered:', error);
+      throw error;
+    }
+  }
+
+  static async updateBrandReview(
+    supabase: SupabaseClient,
+    reviewId: string,
+    updates: Partial<AuditBrandReview>
+  ): Promise<AuditBrandReview> {
+    try {
+      const { data, error } = await supabase
+        .from('audit_brand_reviews')
+        .update(updates)
+        .eq('id', reviewId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as AuditBrandReview;
+    } catch (error) {
+      console.error('Failed to update brand review:', error);
+      throw error;
     }
   }
 }

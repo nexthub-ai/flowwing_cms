@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { 
-  Building2, PlayCircle, Eye, CheckCircle2, ExternalLink, Mail, FileCheck, Loader2
+  Building2, PlayCircle, Eye, CheckCircle2, ExternalLink, Mail, FileCheck, Loader2, Link2
 } from "lucide-react";
 import { CombinedAuditData } from "@/services/combinedAuditService";
 
@@ -28,6 +28,17 @@ interface AuditTableProps {
 }
 
 export function AuditTable({ data, onViewDetails, onApprove, isApproving }: AuditTableProps) {
+  const getPriorityPlatform = (item: CombinedAuditData) => {
+    if (item.brand_review?.platform_priority_order && item.brand_review.platform_priority_order.length > 0) {
+      return item.brand_review.platform_priority_order[0];
+    }
+    return "-";
+  };
+
+  const getScore = (item: CombinedAuditData) => {
+    return item.brand_review?.overall_score || "-";
+  };
+
   return (
     <div className="overflow-x-auto">
       <Table>
@@ -35,9 +46,11 @@ export function AuditTable({ data, onViewDetails, onApprove, isApproving }: Audi
           <TableRow>
             <TableHead>Brand</TableHead>
             <TableHead>Email</TableHead>
+            <TableHead>Social Handles</TableHead>
+            <TableHead>Score</TableHead>
+            <TableHead>Priority Platform</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Report URL</TableHead>
-            <TableHead>Review URL</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -45,6 +58,8 @@ export function AuditTable({ data, onViewDetails, onApprove, isApproving }: Audi
           {data.map((item) => {
             const statusConfig = item.run_status ? runStatusConfig[item.run_status] : null;
             const StatusIcon = statusConfig?.icon;
+            const score = getScore(item);
+            const priorityPlatform = getPriorityPlatform(item);
             
             return (
               <TableRow key={item.signup_id}>
@@ -59,6 +74,46 @@ export function AuditTable({ data, onViewDetails, onApprove, isApproving }: Audi
                     <Mail className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">{item.email}</span>
                   </div>
+                </TableCell>
+                <TableCell>
+                  {item.social_handles && Object.keys(item.social_handles).length > 0 ? (
+                    <div className="flex flex-wrap gap-1">
+                      {Object.entries(item.social_handles).map(([platform, url]) => (
+                        <Button
+                          key={platform}
+                          variant="ghost"
+                          size="sm"
+                          asChild
+                          className="h-6 px-2 text-xs"
+                        >
+                          <a href={url} target="_blank" rel="noopener noreferrer">
+                            <Link2 className="h-3 w-3 mr-1" />
+                            {platform}
+                          </a>
+                        </Button>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground text-sm">-</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {score !== "-" ? (
+                    <Badge variant="outline" className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 text-blue-600 border-blue-500/20 font-bold">
+                      {score}/100
+                    </Badge>
+                  ) : (
+                    <span className="text-muted-foreground text-sm">-</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {priorityPlatform !== "-" ? (
+                    <Badge variant="outline" className="bg-violet-500/10 text-violet-600 border-violet-500/20 capitalize">
+                      {priorityPlatform}
+                    </Badge>
+                  ) : (
+                    <span className="text-muted-foreground text-sm">-</span>
+                  )}
                 </TableCell>
                 <TableCell>
                   {statusConfig ? (
@@ -85,18 +140,6 @@ export function AuditTable({ data, onViewDetails, onApprove, isApproving }: Audi
                   )}
                 </TableCell>
                 <TableCell>
-                  {item.review_url ? (
-                    <Button variant="link" size="sm" asChild className="h-auto p-0">
-                      <a href={item.review_url} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-3 w-3 mr-1" />
-                        View
-                      </a>
-                    </Button>
-                  ) : (
-                    <span className="text-muted-foreground text-sm">-</span>
-                  )}
-                </TableCell>
-                <TableCell>
                   <div className="flex items-center gap-2">
                     {item.brand_review && (
                       <Button
@@ -108,11 +151,11 @@ export function AuditTable({ data, onViewDetails, onApprove, isApproving }: Audi
                         Details
                       </Button>
                     )}
-                    {item.run_status === "review" && item.run_id && (
+                    {item.run_status === "review" && item.run_id && item.brand_review && (
                       <Button
                         variant="default"
                         size="sm"
-                        onClick={() => onApprove(item.run_id!)}
+                        onClick={() => onViewDetails(item)}
                         disabled={isApproving}
                       >
                         {isApproving ? (
@@ -120,7 +163,7 @@ export function AuditTable({ data, onViewDetails, onApprove, isApproving }: Audi
                         ) : (
                           <FileCheck className="h-3 w-3 mr-1" />
                         )}
-                        Approve
+                        Approve & Deliver
                       </Button>
                     )}
                   </div>
