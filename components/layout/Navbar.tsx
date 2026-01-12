@@ -15,13 +15,8 @@ import { useState, useEffect } from 'react';
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Content", href: "/content", icon: PenTool },
-  { label: "Workflow", href: "/workflow", icon: GitBranch },
-  { label: "Tools", href: "/tools", icon: Wand2 },
-  { label: "Audits", href: "/audits", icon: ClipboardCheck, roles: ["admin", "pms"] as const },
-  { label: "Clients", href: "/clients", icon: Users },
+  { label: "Audit Management", href: "/audit-management", icon: FileText, roles: ["admin", "pms"] as const },
   { label: "Admin", href: "/admin", icon: UserCog, roles: ["admin"] as const },
-  { label: "Settings", href: "/settings", icon: Settings },
 ];
 
 interface NavbarProps {

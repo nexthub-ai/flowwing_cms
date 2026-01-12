@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { createClient } from '@/supabase/server';
 import { DashboardService } from '@/services/dashboardService';
-import { Navbar } from '@/components/layout/Navbar';
+import { Sidebar } from '@/components/layout/Sidebar';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
 import { ClientList } from '@/components/dashboard/ClientList';
@@ -25,10 +25,10 @@ export default async function DashboardPage() {
   const stats = await DashboardService.getDashboardStats(supabase);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <main className="pt-24 pb-12">
-        <div className="container px-6">
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <main className="flex-1 ml-64">
+        <div className="container py-8 px-6">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>

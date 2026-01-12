@@ -1,17 +1,12 @@
-import { Navbar } from '@/components/layout/Navbar';
+import { Sidebar } from '@/components/layout/Sidebar';
 import { Shield } from 'lucide-react';
 
-/**
- * Admin Page
- * Placeholder - to be implemented with admin features
- * Should check for admin role before allowing access
- */
 export default function AdminPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <main className="pt-24 pb-12">
-        <div className="container px-6">
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <main className="flex-1 ml-64">
+        <div className="container py-8 px-6">
           <div className="mb-8">
             <h1 className="font-display text-3xl font-bold mb-1">Admin Panel</h1>
             <p className="text-muted-foreground">

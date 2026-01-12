@@ -2,16 +2,14 @@ import {configureStore} from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
 import uiReducer from './slices/uiSlice';
 import dashboardReducer from './slices/dashboardSlice';
-import auditsReducer from './slices/auditsSlice';
-import contentReducer from './slices/contentSlice';
+import auditsReducer from './slices/auditsSlice'; 
 
 export const store=configureStore({
     reducer:{
         auth:authReducer,
         ui:uiReducer,
         dashboard:dashboardReducer,
-        audits:auditsReducer,
-        content:contentReducer,
+        audits:auditsReducer, 
     },
     middleware:(getDefaultMiddleware)=>
         getDefaultMiddleware({

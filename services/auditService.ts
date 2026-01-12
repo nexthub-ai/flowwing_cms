@@ -19,6 +19,40 @@ export interface AuditSignup {
 }
 
 /**
+ * Audit Run interface
+ */
+export interface AuditRun {
+  id: string;
+  audit_signup_id: string;
+  status: string;
+  started_at: string;
+  completed_at: string | null;
+  report_url: string | null;
+  review_url: string | null;
+  delivered_at: string | null;
+  created_at: string;
+}
+
+/**
+ * Audit Brand Review interface
+ */
+export interface AuditBrandReview {
+  id: string;
+  audit_run_id: string;
+  executive_summary: any;
+  overall_score: number | null;
+  brand_clarity: any;
+  strategic_focus_areas: any;
+  solutions: any;
+  inspiration_guidance: any;
+  next_30_day_focus: any;
+  platforms: any;
+  content_patterns: any;
+  platform_priority_order: any;
+  created_at: string;
+}
+
+/**
  * Audit statistics by status
  */
 export interface AuditStats {
@@ -137,6 +171,90 @@ export class AuditService {
       return data as AuditSignup;
     } catch (error) {
       console.error('Failed to fetch audit:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get all audit runs
+   */
+  static async getAllAuditRuns(
+    supabase: SupabaseClient
+  ): Promise<AuditRun[]> {
+    try {
+      const { data, error } = await supabase
+        .from('audit_runs')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return (data as AuditRun[]) || [];
+    } catch (error) {
+      console.error('Failed to fetch audit runs:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get audit runs for a specific signup
+   */
+  static async getAuditRunsBySignupId(
+    supabase: SupabaseClient,
+    signupId: string
+  ): Promise<AuditRun[]> {
+    try {
+      const { data, error } = await supabase
+        .from('audit_runs')
+        .select('*')
+        .eq('audit_signup_id', signupId)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return (data as AuditRun[]) || [];
+    } catch (error) {
+      console.error('Failed to fetch audit runs:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all brand reviews with audit run details
+   */
+  static async getAllBrandReviews(
+    supabase: SupabaseClient
+  ): Promise<AuditBrandReview[]> {
+    try {
+      const { data, error } = await supabase
+        .from('audit_brand_reviews')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return (data as AuditBrandReview[]) || [];
+    } catch (error) {
+      console.error('Failed to fetch brand reviews:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get brand review for a specific audit run
+   */
+  static async getBrandReviewByRunId(
+    supabase: SupabaseClient,
+    runId: string
+  ): Promise<AuditBrandReview | null> {
+    try {
+      const { data, error } = await supabase
+        .from('audit_brand_reviews')
+        .select('*')
+        .eq('audit_run_id', runId)
+        .single();
+
+      if (error) throw error;
+      return data as AuditBrandReview;
+    } catch (error) {
+      console.error('Failed to fetch brand review:', error);
       return null;
     }
   }

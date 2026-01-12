@@ -1,12 +1,63 @@
 -- WARNING: This schema is for context only and is not meant to be run.
 -- Table order and constraints may not be valid for execution.
 
+CREATE TABLE public.audit_brand_reviews (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  audit_run_id uuid NOT NULL,
+  executive_summary jsonb,
+  overall_score integer CHECK (overall_score >= 0 AND overall_score <= 100),
+  brand_clarity jsonb,
+  strategic_focus_areas jsonb,
+  solutions jsonb,
+  inspiration_guidance jsonb,
+  next_30_day_focus jsonb,
+  platforms jsonb,
+  content_patterns jsonb,
+  platform_priority_order jsonb,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT audit_brand_reviews_pkey PRIMARY KEY (id),
+  CONSTRAINT audit_brand_reviews_audit_run_id_fkey FOREIGN KEY (audit_run_id) REFERENCES public.audit_runs(id)
+);
+CREATE TABLE public.audit_platform_snapshots (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  audit_run_id uuid NOT NULL,
+  platform text NOT NULL CHECK (platform = ANY (ARRAY['instagram'::text, 'tiktok'::text, 'youtube'::text, 'twitter'::text, 'linkedin'::text, 'website'::text])),
+  profile jsonb,
+  metrics jsonb,
+  hook_analysis jsonb,
+  post_count integer,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT audit_platform_snapshots_pkey PRIMARY KEY (id),
+  CONSTRAINT audit_platform_snapshots_audit_run_id_fkey FOREIGN KEY (audit_run_id) REFERENCES public.audit_runs(id)
+);
+CREATE TABLE public.audit_raw_platform_data (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  audit_run_id uuid NOT NULL,
+  platform text NOT NULL CHECK (platform = ANY (ARRAY['instagram'::text, 'tiktok'::text, 'youtube'::text, 'twitter'::text, 'linkedin'::text, 'website'::text])),
+  raw_payload jsonb NOT NULL,
+  scraped_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT audit_raw_platform_data_pkey PRIMARY KEY (id),
+  CONSTRAINT audit_raw_platform_data_audit_run_id_fkey FOREIGN KEY (audit_run_id) REFERENCES public.audit_runs(id)
+);
+CREATE TABLE public.audit_runs (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  audit_signup_id uuid NOT NULL,
+  status text NOT NULL DEFAULT 'in_progress'::text,
+  started_at timestamp with time zone NOT NULL DEFAULT now(),
+  completed_at timestamp with time zone,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  report_url text,
+  delivered_at timestamp without time zone,
+  review_url text,
+  CONSTRAINT audit_runs_pkey PRIMARY KEY (id),
+  CONSTRAINT audit_runs_audit_signup_id_fkey FOREIGN KEY (audit_signup_id) REFERENCES public.audit_signups(id)
+);
 CREATE TABLE public.audit_signups (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   email text NOT NULL,
   company_name text,
   social_handles jsonb,
-  status text NOT NULL DEFAULT 'pending'::text CHECK (status = ANY (ARRAY['pending'::text, 'payment_received'::text, 'payment_failed'::text, 'planning'::text, 'in_progress'::text, 'review'::text, 'completed'::text])),
+  status text NOT NULL DEFAULT 'pending'::text,
   assigned_to uuid,
   notes text,
   stripe_payment_id text,
