@@ -8,10 +8,7 @@ export interface CloudinaryUploadResult {
   bytes: number;
 }
 
-export class CloudinaryService {
-  /**
-   * Generate Cloudinary signature for secure upload
-   */
+export class CloudinaryService { 
   static generateSignature(params: {
     folder: string;
     publicId: string;
@@ -30,9 +27,134 @@ export class CloudinaryService {
     return { signature, timestamp };
   }
 
-  /**
-   * Generate PDF from HTML using Puppeteer
-   */
+  
+  static async htmlToScreenshot(htmlContent: string): Promise<Buffer> {
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+
+    try {
+      const page = await browser.newPage();
+      await page.setViewport({ width: 1200, height: 800, deviceScaleFactor: 2 }); // Retina quality
+      await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+      
+      // Take full page screenshot
+      const screenshotBuffer = await page.screenshot({
+        fullPage: true,
+        type: 'png',
+      });
+
+      return Buffer.from(screenshotBuffer);
+    } finally {
+      await browser.close();
+    }
+  }
+
+
+  static async screenshotToPdf(screenshotBuffer: Buffer): Promise<Buffer> {
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+
+    try {
+      const page = await browser.newPage();
+      
+      // Convert buffer to base64 data URL
+      const base64Image = screenshotBuffer.toString('base64');
+      const dataUrl = `data:image/png;base64,${base64Image}`;
+      
+      // Create HTML with the image
+      const imageHtml = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <style>
+              * { margin: 0; padding: 0; }
+              body { display: flex; justify-content: center; align-items: center; }
+              img { width: 100%; height: auto; display: block; }
+            </style>
+          </head>
+          <body>
+            <img src="${dataUrl}" />
+          </body>
+        </html>
+      `;
+      
+      await page.setContent(imageHtml, { waitUntil: 'networkidle0' });
+      
+      // Generate PDF from the image
+      const pdfBuffer = await page.pdf({
+        format: 'A4',
+        printBackground: true,
+        margin: {
+          top: '0',
+          right: '0',
+          bottom: '0',
+          left: '0'
+        }
+      });
+
+      return Buffer.from(pdfBuffer);
+    } finally {
+      await browser.close();
+    }
+  }
+
+ 
+  static async uploadScreenshot(params: {
+    screenshotBuffer: Buffer;
+    publicId: string;
+    folder?: string;
+  }): Promise<CloudinaryUploadResult> {
+    const timestamp = Math.floor(Date.now() / 1000);
+    const folder = params.folder || 'audit-reports';
+    
+    // Generate signature
+    const { signature } = this.generateSignature({
+      folder,
+      publicId: params.publicId,
+      timestamp,
+    });
+
+    // Prepare form data
+    const formData = new FormData();
+    formData.append('file', new Blob([new Uint8Array(params.screenshotBuffer)], { type: 'image/png' }), 'report.png');
+    formData.append('public_id', params.publicId);
+    formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
+    formData.append('timestamp', timestamp.toString());
+    formData.append('signature', signature);
+    formData.append('folder', folder);
+
+    // Upload to Cloudinary
+    const cloudinaryResponse = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!}/image/upload`,
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
+
+    if (!cloudinaryResponse.ok) {
+      const errorText = await cloudinaryResponse.text();
+      throw new Error(`Cloudinary upload failed: ${errorText}`);
+    }
+
+    const uploadResult = await cloudinaryResponse.json();
+
+    // Build public download URL
+    const publicDownloadUrl = this.buildDownloadUrl(uploadResult.secure_url);
+
+    return {
+      secure_url: uploadResult.secure_url,
+      public_url: publicDownloadUrl,
+      public_id: uploadResult.public_id,
+      bytes: uploadResult.bytes,
+    };
+  }
+
+ 
   static async htmlToPdf(htmlContent: string): Promise<Buffer> {
     const browser = await puppeteer.launch({
       headless: true,
@@ -80,7 +202,7 @@ export class CloudinaryService {
 
     // Prepare form data
     const formData = new FormData();
-    formData.append('file', new Blob([params.pdfBuffer], { type: 'application/pdf' }), 'report.pdf');
+    formData.append('file', new Blob([new Uint8Array(params.pdfBuffer)], { type: 'application/pdf' }), 'report.pdf');
     formData.append('public_id', params.publicId);
     formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
     formData.append('timestamp', timestamp.toString());
@@ -178,30 +300,22 @@ export class CloudinaryService {
       '/raw/upload/fl_attachment/'
     );
   }
-
-  /**
-   * Upload audit report as PDF (converts HTML to PDF first)
-   */
+ 
   static async uploadAuditReport(params: {
     runId: string;
     htmlContent: string;
   }): Promise<CloudinaryUploadResult> {
     const publicId = `audits/${params.runId}-${Date.now()}`;
     
-    // Convert HTML to PDF
-    const pdfBuffer = await this.htmlToPdf(params.htmlContent);
-    
-    // Upload PDF to Cloudinary
-    return this.uploadPdf({
-      pdfBuffer,
+    // Upload HTML directly to Cloudinary
+    return this.uploadHtml({
+      htmlContent: params.htmlContent,
       publicId,
       folder: 'audit-reports',
     });
   }
 
-  /**
-   * Delete file from Cloudinary
-   */
+ 
   static async deleteFile(publicId: string): Promise<boolean> {
     const timestamp = Math.floor(Date.now() / 1000);
     const signatureBase = `public_id=${publicId}&timestamp=${timestamp}`;

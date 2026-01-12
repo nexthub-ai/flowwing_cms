@@ -1,5 +1,8 @@
 import { AuditBrandReview } from './auditService';
 
+// Re-export the type for convenience
+export type { AuditBrandReview };
+
 /**
  * Service for generating audit report HTML
  */
@@ -128,7 +131,7 @@ export class AuditReportService {
     /* Score Section */
     .score-section {
       background: linear-gradient(to bottom, #fafafa, white);
-      padding: 3rem 2rem;
+      padding: 4rem 2rem;
       text-align: center;
       border-bottom: 1px solid #e2e8f0;
     }
@@ -138,38 +141,60 @@ export class AuditReportService {
       color: #64748b;
       text-transform: uppercase;
       letter-spacing: 2px;
-      margin-bottom: 1rem;
+      margin-bottom: 2rem;
       font-weight: 600;
     }
     
+    .score-circle-container {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin: 0 auto;
+    }
+    
+    .score-circle-svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+    
+    .score-circle-bg {
+      fill: none;
+      stroke: #e2e8f0;
+      stroke-width: 12;
+    }
+    
+    .score-circle-progress {
+      fill: none;
+      stroke: ${scoreColor};
+      stroke-width: 12;
+      stroke-linecap: round;
+      stroke-dasharray: 565.48;
+      stroke-dashoffset: ${565.48 - (565.48 * (review.overall_score || 0)) / 100};
+      transition: stroke-dashoffset 1.5s ease;
+    }
+    
+    .score-circle-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    
     .score-value {
-      font-size: 5rem;
+      font-size: 4.5rem;
       font-weight: 800;
       color: ${scoreColor};
       line-height: 1;
-      margin-bottom: 0.5rem;
+      display: block;
     }
     
     .score-max {
-      font-size: 2rem;
+      font-size: 1.5rem;
       color: #94a3b8;
-    }
-    
-    .score-bar-container {
-      max-width: 500px;
-      margin: 2rem auto 0;
-      height: 12px;
-      background: #e2e8f0;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-    
-    .score-bar-fill {
-      height: 100%;
-      background: ${scoreColor};
-      width: ${review.overall_score || 0}%;
-      border-radius: 6px;
-      transition: width 1s ease;
+      display: block;
+      margin-top: 0.5rem;
     }
     
     /* Content */
@@ -592,12 +617,15 @@ export class AuditReportService {
     <!-- Score Section -->
     <section class="score-section">
       <div class="score-label">Overall Score</div>
-      <div>
-        <span class="score-value">${review.overall_score || 0}</span>
-        <span class="score-max">/ 100</span>
-      </div>
-      <div class="score-bar-container">
-        <div class="score-bar-fill"></div>
+      <div class="score-circle-container">
+        <svg class="score-circle-svg" viewBox="0 0 200 200">
+          <circle class="score-circle-bg" cx="100" cy="100" r="90" />
+          <circle class="score-circle-progress" cx="100" cy="100" r="90" />
+        </svg>
+        <div class="score-circle-content">
+          <span class="score-value">${review.overall_score || 0}</span>
+          <span class="score-max">out of 100</span>
+        </div>
       </div>
     </section>
 

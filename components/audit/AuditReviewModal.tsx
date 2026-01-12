@@ -6,7 +6,7 @@ import { FileCheck, Loader2, Edit, Save, Eye, X } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { CombinedAuditData } from "@/services/combinedAuditService";
-import { AuditReportService } from "@/services/auditReportService";
+import { AuditReportService, AuditBrandReview } from "@/services/auditReportService";
 import { AuditService } from "@/services/auditService";
 import { createClient } from "@/supabase/client";
 
@@ -27,6 +27,7 @@ export function AuditReviewModal({
 }: AuditReviewModalProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState("");
+  const [processingStage, setProcessingStage] = useState<string>("");
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -99,6 +100,8 @@ export function AuditReviewModal({
     }
 
     try {
+      setProcessingStage("Generating report screenshot...");
+      
       // Call the approve API with HTML content
       const response = await fetch('/api/audit/approve', {
         method: 'POST',
@@ -111,13 +114,26 @@ export function AuditReviewModal({
         }),
       });
 
+      setProcessingStage("Uploading to Cloudinary...");
+      
       const result = await response.json();
 
       if (!response.ok) {
         throw new Error(result.error || 'Failed to approve audit');
       }
 
+      setProcessingStage("Calling webhook...");
+      
+      // Small delay to show the stage
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setProcessingStage("Updating status...");
+      
+      // Small delay to show the stage
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       toast.success('Audit approved and delivered successfully!');
+      setProcessingStage("");
       
       // Call the original onApprove to refresh data
       onApprove(selectedAudit.run_id);
@@ -130,6 +146,7 @@ export function AuditReviewModal({
     } catch (error) {
       console.error('Approve error:', error);
       toast.error('Failed to approve audit. Please try again.');
+      setProcessingStage("");
     }
   };
 
@@ -200,12 +217,12 @@ export function AuditReviewModal({
                   variant="secondary"
                   size="sm"
                   onClick={handleApproveWithReport}
-                  disabled={isApproving}
+                  disabled={isApproving || processingStage !== ""}
                 >
-                  {isApproving ? (
+                  {isApproving || processingStage ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Approving...
+                      {processingStage || "Delivering..."}
                     </>
                   ) : (
                     <>
