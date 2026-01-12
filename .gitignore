@@ -58,4 +58,5 @@ src/pages-old/
 # Testing
 coverage
 .nyc_output
-.envenv.txt
+.env
+.env.txt
