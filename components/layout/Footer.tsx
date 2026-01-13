@@ -62,7 +62,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="mailto:support@flowwing.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <a href="mailto:support@flowwing.ai" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Contact
                 </a>
               </li>
@@ -77,8 +77,8 @@ export function Footer() {
               © 2025 FlowWing. All rights reserved.
             </p>
             <div className="flex items-center gap-6">
-              <a href="mailto:support@flowwing.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                support@flowwing.com
+              <a href="mailto:support@flowwing.ai" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                support@flowwing.ai
               </a>
             </div>
           </div>

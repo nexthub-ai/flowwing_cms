@@ -74,7 +74,7 @@ export default function PrivacyPage() {
             <section>
               <h2 className="font-display text-2xl font-bold mb-4">Data Retention</h2>
               <p className="text-muted-foreground leading-relaxed">
-                We retain your audit data for up to 12 months to provide ongoing support and reference. You may request deletion of your data at any time by contacting us at support@flowwing.com.
+                We retain your audit data for up to 12 months to provide ongoing support and reference. You may request deletion of your data at any time by contacting us at support@flowwing.ai.
               </p>
             </section>
 
@@ -97,8 +97,8 @@ export default function PrivacyPage() {
               <p className="text-muted-foreground leading-relaxed">
                 If you have any questions about this Privacy Policy, please contact us at:
                 <br />
-                <a href="mailto:support@flowwing.com" className="text-primary hover:underline">
-                  support@flowwing.com
+                <a href="mailto:support@flowwing.ai" className="text-primary hover:underline">
+                  support@flowwing.ai
                 </a>
               </p>
             </section>

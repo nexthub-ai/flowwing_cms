@@ -107,8 +107,8 @@ export default function TermsPage() {
               <p className="text-muted-foreground leading-relaxed">
                 For questions about these Terms and Conditions, please contact us at:
                 <br />
-                <a href="mailto:support@flowwing.com" className="text-primary hover:underline">
-                  support@flowwing.com
+                <a href="mailto:support@flowwing.ai" className="text-primary hover:underline">
+                  support@flowwing.ai
                 </a>
               </p>
             </section>
