@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import Image from 'next/image';
 import {
   LayoutDashboard, FileText, Users, LogOut,
-  PenTool, ClipboardCheck, UsersRound
+  PenTool, ClipboardCheck, UsersRound, Moon, Sun
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectUser, selectRoles, signOut } from "@/store/slices/authSlice";
+import { useTheme } from "next-themes";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -27,10 +28,15 @@ export function Sidebar() {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const roles = useAppSelector(selectRoles);
+  const { theme, setTheme } = useTheme();
 
   const handleSignOut = async () => {
     await dispatch(signOut());
     router.push('/');
+  };
+
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   const hasRole = (role: string) => {
@@ -93,14 +99,26 @@ export function Sidebar() {
                 {roles.includes('admin') ? 'Administrator' : roles.join(', ')}
               </p>
             </div>
-            <Button 
-              variant="outline" 
-              className="w-full justify-start gap-3" 
-              onClick={handleSignOut}
-            >
-              <LogOut className="h-4 w-4" />
-              Sign Out
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                className="flex-1 justify-start gap-3"
+                onClick={handleSignOut}
+              >
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={toggleTheme}
+                className="shrink-0"
+              >
+                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </div>
           </div>
         )}
       </div>

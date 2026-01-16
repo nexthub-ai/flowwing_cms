@@ -9,11 +9,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -570,72 +572,103 @@ export default function TeamPage() {
         </div>
       </main>
 
-      {/* Invite Creator Modal */}
-      <Dialog open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>
-        <DialogContent className="sm:max-w-[450px]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <UserPlus className="h-5 w-5" />
+      {/* Invite Creator Drawer */}
+      <Sheet open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>
+        <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
+          <SheetHeader className="pb-4">
+            <SheetTitle className="flex items-center gap-2 text-xl">
+              <UserPlus className="h-5 w-5 text-primary" />
               Invite Creator
-            </DialogTitle>
-          </DialogHeader>
+            </SheetTitle>
+            <SheetDescription>
+              Send an invitation to a freelancer to join your team
+            </SheetDescription>
+          </SheetHeader>
 
-          <div className="space-y-4 mt-4">
-            <div>
-              <Label htmlFor="inviteEmail">Email *</Label>
-              <Input
-                id="inviteEmail"
-                type="email"
-                value={inviteEmail}
-                onChange={(e) => setInviteEmail(e.target.value)}
-                placeholder="creator@example.com"
-                className="mt-1"
-              />
+          <Separator className="mb-6" />
+
+          <div className="space-y-6">
+            {/* Basic Information */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                Creator Information
+              </h3>
+
+              <div className="space-y-2">
+                <Label htmlFor="inviteEmail" className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  Email <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="inviteEmail"
+                  type="email"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                  placeholder="creator@example.com"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="inviteName" className="flex items-center gap-2">
+                  <UserPlus className="h-4 w-4 text-muted-foreground" />
+                  Name
+                </Label>
+                <Input
+                  id="inviteName"
+                  value={inviteName}
+                  onChange={(e) => setInviteName(e.target.value)}
+                  placeholder="Creator's name"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="inviteSpecialty" className="flex items-center gap-2">
+                  <Pencil className="h-4 w-4 text-muted-foreground" />
+                  Specialty
+                </Label>
+                <Select value={inviteSpecialty} onValueChange={setInviteSpecialty}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select specialty" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SPECIALTIES.map((spec) => (
+                      <SelectItem key={spec.value} value={spec.value}>
+                        <div className="flex items-center gap-2">
+                          <spec.icon className="h-4 w-4" />
+                          {spec.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
-            <div>
-              <Label htmlFor="inviteName">Name</Label>
-              <Input
-                id="inviteName"
-                value={inviteName}
-                onChange={(e) => setInviteName(e.target.value)}
-                placeholder="Creator's name"
-                className="mt-1"
-              />
+            <Separator />
+
+            {/* Personal Message */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                Invitation Message
+              </h3>
+
+              <div className="space-y-2">
+                <Label htmlFor="inviteMessage">Personal message (optional)</Label>
+                <Textarea
+                  id="inviteMessage"
+                  value={inviteMessage}
+                  onChange={(e) => setInviteMessage(e.target.value)}
+                  placeholder="Add a personal message to the invitation..."
+                  rows={4}
+                />
+                <p className="text-xs text-muted-foreground">
+                  The creator will receive an email with a magic link to create their account
+                </p>
+              </div>
             </div>
 
-            <div>
-              <Label htmlFor="inviteSpecialty">Specialty</Label>
-              <Select value={inviteSpecialty} onValueChange={setInviteSpecialty}>
-                <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Select specialty" />
-                </SelectTrigger>
-                <SelectContent>
-                  {SPECIALTIES.map((spec) => (
-                    <SelectItem key={spec.value} value={spec.value}>
-                      <div className="flex items-center gap-2">
-                        <spec.icon className="h-4 w-4" />
-                        {spec.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="inviteMessage">Personal message (optional)</Label>
-              <Textarea
-                id="inviteMessage"
-                value={inviteMessage}
-                onChange={(e) => setInviteMessage(e.target.value)}
-                placeholder="Add a personal message to the invitation..."
-                className="mt-1"
-                rows={3}
-              />
-            </div>
-
-            <div className="flex justify-end gap-2 pt-4">
+            {/* Actions */}
+            <div className="flex justify-end gap-3 pt-4 border-t">
               <Button
                 variant="outline"
                 onClick={() => {
@@ -661,8 +694,8 @@ export default function TeamPage() {
               </Button>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

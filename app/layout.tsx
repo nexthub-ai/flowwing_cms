@@ -6,6 +6,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ReduxProvider } from "@/components/providers/redux-provider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,15 +26,22 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ReduxProvider>
-        <QueryProvider>
-          <TooltipProvider>
-            {children}
-            <Toaster />
-            <Sonner />
-          </TooltipProvider>
-        </QueryProvider>
-        </ReduxProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ReduxProvider>
+            <QueryProvider>
+              <TooltipProvider>
+                {children}
+                <Toaster />
+                <Sonner />
+              </TooltipProvider>
+            </QueryProvider>
+          </ReduxProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

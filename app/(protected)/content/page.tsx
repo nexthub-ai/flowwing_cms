@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { ContentKanban } from '@/components/content/ContentKanban';
 import { ContentDetailDrawer } from '@/components/content/ContentDetailDrawer';
-import { ContentCreateModal } from '@/components/content/ContentCreateModal';
+import { ContentCreateDrawer } from '@/components/content/ContentCreateDrawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ContentFull } from '@/types';
@@ -146,8 +146,8 @@ export default function ContentPage() {
         onUpdate={handleContentUpdate}
       />
 
-      {/* Create Content Modal */}
-      <ContentCreateModal
+      {/* Create Content Drawer */}
+      <ContentCreateDrawer
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
         onSuccess={handleContentUpdate}
