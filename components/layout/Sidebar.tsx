@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import Image from 'next/image';
-import { 
-  LayoutDashboard, FileText, Users, Settings, LogOut, 
-  PenTool, Wand2, GitBranch, UserCog, ClipboardCheck 
+import {
+  LayoutDashboard, FileText, Users, LogOut,
+  PenTool, ClipboardCheck, UsersRound
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -14,8 +14,11 @@ import { selectUser, selectRoles, signOut } from "@/store/slices/authSlice";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Audit Management", href: "/audit-management", icon: FileText, roles: ["admin", "pms"] as const }, 
-  { label: "Admin", href: "/admin", icon: UserCog, roles: ["admin"] as const },
+  { label: "Content", href: "/content", icon: FileText, roles: ["admin", "pms"] as const },
+  { label: "Clients", href: "/clients", icon: Users, roles: ["admin", "pms"] as const },
+  { label: "Team", href: "/team", icon: UsersRound, roles: ["admin", "pms"] as const },
+  { label: "My Tasks", href: "/my-tasks", icon: PenTool, roles: ["creator"] as const },
+  { label: "Audit Management", href: "/audit-management", icon: ClipboardCheck, roles: ["admin", "pms"] as const },
 ];
 
 export function Sidebar() {

@@ -2,13 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileCheck, Loader2, Edit, Save, Eye, X } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { CombinedAuditData } from "@/services/combinedAuditService";
-import { AuditReportService, AuditBrandReview } from "@/services/auditReportService";
-import { AuditService } from "@/services/auditService";
+import { AuditReportService } from "@/services/auditReportService";
+import { AuditService, AuditBrandReview } from "@/services/auditService";
 import { createClient } from "@/supabase/client";
+import { AuditReviewForm } from "./AuditReviewForm";
 
 interface AuditReviewModalProps {
   isOpen: boolean;
@@ -18,90 +20,104 @@ interface AuditReviewModalProps {
   isApproving: boolean;
 }
 
-export function AuditReviewModal({ 
-  isOpen, 
-  onClose, 
-  selectedAudit, 
-  onApprove, 
-  isApproving 
+export function AuditReviewModal({
+  isOpen,
+  onClose,
+  selectedAudit,
+  onApprove,
+  isApproving
 }: AuditReviewModalProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedContent, setEditedContent] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   const [processingStage, setProcessingStage] = useState<string>("");
-  const contentRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState<string>("preview");
+
+  // Local state for editing - copy of brand_review
+  const [editedReview, setEditedReview] = useState<AuditBrandReview | null>(null);
+
+  // Track if there are unsaved changes
+  const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     if (selectedAudit?.brand_review) {
-      const html = AuditReportService.generateHTML(
-        selectedAudit.brand_review,
-        selectedAudit.brand_name || undefined
-      );
-      setEditedContent(html);
+      // Deep clone the review data for editing
+      setEditedReview(JSON.parse(JSON.stringify(selectedAudit.brand_review)));
       setIsEditing(false);
+      setHasChanges(false);
+      setActiveTab("preview");
     }
   }, [selectedAudit]);
 
-  const parseHtmlToReviewData = (html: string): Partial<AuditBrandReview> => {
-    // Create a DOM parser
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    
-    const extractText = (selector: string): string => {
-      const element = doc.querySelector(selector);
-      return element?.textContent?.trim() || '';
-    };
-
-    const extractListItems = (selector: string): string[] => {
-      const items = doc.querySelectorAll(selector);
-      return Array.from(items).map(item => item.textContent?.trim() || '').filter(Boolean);
-    };
-
-    // Note: This is a simplified parser. Full HTML->JSON parsing would be very complex.
-    // For now, we'll just note that edits were made and keep the original structure
-    return {
-      // We can't reliably parse complex nested JSON from edited HTML
-      // So we'll just track that it was edited
-    };
+  // Generate HTML from current review data
+  const generateCurrentHTML = () => {
+    if (!editedReview) return '';
+    return AuditReportService.generateHTML(
+      editedReview,
+      selectedAudit?.brand_name || undefined
+    );
   };
 
-  const handleToggleEdit = async () => {
-    if (isEditing) {
-      // Save changes back to database
-      if (contentRef.current && selectedAudit?.brand_review) {
-        const editedHtml = contentRef.current.innerHTML;
-        setEditedContent(editedHtml);
-        
-        try {
-          const supabase = createClient();
-          
-          // Parse HTML back to review data (simplified - just marks as edited)
-          // In a production app, you'd need sophisticated HTML->JSON parsing
-          const updates = parseHtmlToReviewData(editedHtml);
-          
-          // Note: Since parsing HTML back to exact JSON structure is complex,
-          // we'll store the edited HTML in component state and use it for PDF generation
-          // The original database fields remain unchanged unless you implement full parsing
-          
-          toast.success("Report changes saved (will be used for PDF generation)");
-        } catch (error) {
-          console.error('Save error:', error);
-          toast.error('Failed to save changes');
-          return;
-        }
-      }
+  const handleReviewChange = (updates: Partial<AuditBrandReview>) => {
+    if (!editedReview) return;
+    setEditedReview({ ...editedReview, ...updates });
+    setHasChanges(true);
+  };
+
+  const handleSave = async () => {
+    if (!editedReview || !selectedAudit?.brand_review?.id) {
+      toast.error("No review data to save");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const supabase = createClient();
+
+      // Prepare update data - exclude id, audit_run_id, created_at
+      const { id, audit_run_id, created_at, ...updateData } = editedReview;
+
+      await AuditService.updateBrandReview(
+        supabase,
+        selectedAudit.brand_review.id,
+        updateData
+      );
+
+      setHasChanges(false);
+      toast.success("Changes saved to database");
+    } catch (error) {
+      console.error('Save error:', error);
+      toast.error('Failed to save changes');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleToggleEdit = () => {
+    if (isEditing && hasChanges) {
+      // Switching from edit to preview with unsaved changes - prompt to save
+      handleSave();
     }
     setIsEditing(!isEditing);
+    setActiveTab(isEditing ? "preview" : "edit");
   };
 
   const handleApproveWithReport = async () => {
-    if (!selectedAudit?.run_id || !editedContent) {
+    if (!selectedAudit?.run_id || !editedReview) {
       toast.error("Missing required data");
       return;
     }
 
+    // Save any pending changes first
+    if (hasChanges) {
+      await handleSave();
+    }
+
     try {
-      setProcessingStage("Generating report screenshot...");
-      
+      setProcessingStage("Generating report...");
+
+      // Generate HTML from current edited review data
+      const htmlContent = generateCurrentHTML();
+
       // Call the approve API with HTML content
       const response = await fetch('/api/audit/approve', {
         method: 'POST',
@@ -110,34 +126,28 @@ export function AuditReviewModal({
         },
         body: JSON.stringify({
           runId: selectedAudit.run_id,
-          htmlContent: editedContent,
+          htmlContent: htmlContent,
         }),
       });
 
-      setProcessingStage("Uploading to Cloudinary...");
-      
+      setProcessingStage("Uploading report...");
+
       const result = await response.json();
 
       if (!response.ok) {
         throw new Error(result.error || 'Failed to approve audit');
       }
 
-      setProcessingStage("Calling webhook...");
-      
-      // Small delay to show the stage
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setProcessingStage("Updating status...");
-      
-      // Small delay to show the stage
+      setProcessingStage("Finalizing...");
+
       await new Promise(resolve => setTimeout(resolve, 500));
 
       toast.success('Audit approved and delivered successfully!');
       setProcessingStage("");
-      
+
       // Call the original onApprove to refresh data
       onApprove(selectedAudit.run_id);
-      
+
       // Close modal after successful approval
       setTimeout(() => {
         onClose();
@@ -151,50 +161,81 @@ export function AuditReviewModal({
   };
 
   const handlePreview = () => {
-    if (!editedContent) return;
-    
+    const html = generateCurrentHTML();
+    if (!html) return;
+
     // Open in new window for full preview
     const previewWindow = window.open('', '_blank');
     if (previewWindow) {
-      previewWindow.document.write(editedContent);
+      previewWindow.document.write(html);
       previewWindow.document.close();
     }
   };
 
-  if (!selectedAudit) return null;
+  const handleClose = () => {
+    if (hasChanges) {
+      const confirmClose = window.confirm("You have unsaved changes. Are you sure you want to close?");
+      if (!confirmClose) return;
+    }
+    onClose();
+  };
+
+  if (!selectedAudit || !editedReview) return null;
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
+    <Sheet open={isOpen} onOpenChange={handleClose}>
       <SheetContent side="right" className="w-full sm:w-[70vw] sm:max-w-none overflow-y-auto p-0">
         <div className="sticky top-0 z-50 bg-primary border-b">
           <SheetHeader className="p-6 pb-4 relative">
-            <SheetTitle>Audit Review - {selectedAudit.brand_name}</SheetTitle>
+            <SheetTitle className="text-white">Audit Review - {selectedAudit.brand_name}</SheetTitle>
             <Button
               variant="ghost"
               size="icon"
-              onClick={onClose}
+              onClick={handleClose}
               className="absolute right-6 top-4 text-white hover:bg-white/20 rounded-full h-8 w-8"
             >
               <X className="h-4 w-4" />
             </Button>
           </SheetHeader>
-          
+
           <div className="px-6 pb-4 flex justify-between items-center flex-wrap gap-3">
             <div className="text-sm text-white">
               Score: <span className="text-2xl font-bold text-white">
-                {selectedAudit.brand_review?.overall_score || 0}
+                {editedReview.overall_score || 0}
               </span>/100
+              {hasChanges && (
+                <span className="ml-2 text-yellow-300 text-xs">(unsaved changes)</span>
+              )}
             </div>
             <div className="flex gap-2">
               <Button
                 variant="secondary"
                 size="sm"
                 onClick={handlePreview}
-                disabled={!editedContent}
               >
                 <Eye className="h-4 w-4 mr-2" />
                 Full Preview
               </Button>
+              {isEditing && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleSave}
+                  disabled={isSaving || !hasChanges}
+                >
+                  {isSaving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Save Changes
+                    </>
+                  )}
+                </Button>
+              )}
               <Button
                 variant={isEditing ? "default" : "secondary"}
                 size="sm"
@@ -202,8 +243,8 @@ export function AuditReviewModal({
               >
                 {isEditing ? (
                   <>
-                    <Save className="h-4 w-4 mr-2" />
-                    Save Changes
+                    <Eye className="h-4 w-4 mr-2" />
+                    View Preview
                   </>
                 ) : (
                   <>
@@ -236,34 +277,28 @@ export function AuditReviewModal({
           </div>
         </div>
 
-        {selectedAudit.brand_review && (
-          <div className="p-6">
-            {isEditing && (
-              <div className="mb-4 py-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-900">
-                <strong className="flex items-center gap-2 mb-1">
-                  <Edit className="h-4 w-4" />
-                  Edit Mode Active
-                </strong>
-                Click anywhere in the report below to edit. Changes are saved locally and won't affect the original data.
-              </div>
-            )}
-            
-            <div 
-              ref={contentRef}
-              className={`rounded-lg bg-black transition-all ${
-                isEditing 
-                  ? 'outline-2 outline-dashed outline-blue-400 outline-offset-2' 
-                  : ''
-              }`}
-              contentEditable={isEditing}
-              suppressContentEditableWarning
-              dangerouslySetInnerHTML={{ __html: editedContent }}
-              style={{
-                minHeight: isEditing ? '600px' : 'auto',
-              }}
-            />
-          </div>
-        )}
+        <div className="p-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="mb-4">
+              <TabsTrigger value="preview">Preview</TabsTrigger>
+              <TabsTrigger value="edit">Edit Fields</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="preview">
+              <div
+                className="rounded-lg bg-black"
+                dangerouslySetInnerHTML={{ __html: generateCurrentHTML() }}
+              />
+            </TabsContent>
+
+            <TabsContent value="edit">
+              <AuditReviewForm
+                review={editedReview}
+                onChange={handleReviewChange}
+              />
+            </TabsContent>
+          </Tabs>
+        </div>
       </SheetContent>
     </Sheet>
   );
