@@ -30,7 +30,7 @@ export function Hero() {
             <div className="relative hidden lg:block">
               <div className="relative h-[400px] overflow-hidden">
                 <Image
-                  src={isDark ? "/banner.png" : "/banner1-light.png"}
+                  src={isDark ? "/banner1-dark.png" : "/banner1-light.png"}
                   alt="Brand Analysis"
                   fill
                   className="object-cover object-left"
@@ -106,7 +106,7 @@ export function Hero() {
             <div className="relative hidden lg:block">
               <div className="relative h-[400px] overflow-hidden">
                 <Image
-                  src={isDark ? "/heroImage2.jpg" : "/banner2-light.png"}
+                  src={isDark ? "/banner2-dark.jpg" : "/banner2-light.png"}
                   alt="Brand Analysis"
                   fill
                   className="object-cover object-right"
