@@ -1,25 +1,34 @@
-import Link from "next/link";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { Hero } from "@/components/landing/Hero";
-import { ContentGallery } from "@/components/landing/ContentGallery";
-import { Features } from "@/components/landing/Features";
-import { TestimonialsEnhanced } from "@/components/landing/TestimonialsEnhanced";
-import { PricingSection } from "@/components/landing/PricingSection";
+import { NavbarHome } from "@/components/landing/NavbarHome";
+import { FooterHome } from "@/components/landing/FooterHome";
+import { HeroHome } from "@/components/landing/HeroHome";
+import { FeaturesHome } from "@/components/landing/FeaturesHome";
+import { PricingHome } from "@/components/landing/PricingHome";
+import { IntegrationsHome } from "@/components/landing/IntegrationsHome";
+import { TestimonialsHome } from "@/components/landing/TestimonialsHome";
+import { FAQHome } from "@/components/landing/FAQHome";
+import { SignupHome } from "@/components/landing/SignupHome";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
-      <Navbar showAuth={false} />
+      <NavbarHome />
       <main>
-        <Hero />
-        <ContentGallery />
-        <Features />
-        <TestimonialsEnhanced />
-        <PricingSection />
+        <HeroHome />
+        <div id="features">
+          <FeaturesHome />
+        </div>
+        <div id="pricing">
+          <PricingHome />
+        </div>
+        <div id="integrations">
+          <IntegrationsHome />
+        </div>
+        <TestimonialsHome />
+        <FAQHome />
+        <SignupHome />
       </main>
       
-      <Footer />
+      <FooterHome />
     </div>
   );
 }
