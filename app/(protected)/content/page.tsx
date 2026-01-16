@@ -3,11 +3,15 @@
 import { useState } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { ContentKanban } from '@/components/content/ContentKanban';
+import { ContentList } from '@/components/content/ContentList';
+import { ContentCalendar } from '@/components/content/ContentCalendar';
 import { ContentDetailDrawer } from '@/components/content/ContentDetailDrawer';
 import { ContentCreateDrawer } from '@/components/content/ContentCreateDrawer';
+import { ContentFilterPanel } from '@/components/content/ContentFilterPanel';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { ContentFull } from '@/types';
+import { ContentFull, ContentFilters } from '@/types';
 import {
   Plus,
   Search,
@@ -28,6 +32,8 @@ export default function ContentPage() {
   const [selectedContent, setSelectedContent] = useState<ContentFull | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState<ContentFilters>({});
 
   const handleCardClick = (content: ContentFull) => {
     setSelectedContent(content);
@@ -108,9 +114,19 @@ export default function ContentPage() {
             </div>
 
             {/* Filter Button */}
-            <Button variant="outline" size="sm" className="gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1"
+              onClick={() => setIsFilterOpen(true)}
+            >
               <Filter className="h-4 w-4" />
               Filter
+              {Object.keys(filters).filter(k => filters[k as keyof ContentFilters]).length > 0 && (
+                <Badge variant="secondary" className="ml-1 h-5 w-5 p-0 justify-center">
+                  {Object.keys(filters).filter(k => filters[k as keyof ContentFilters]).length}
+                </Badge>
+              )}
             </Button>
           </div>
 
@@ -124,15 +140,18 @@ export default function ContentPage() {
             )}
 
             {viewMode === 'list' && (
-              <div className="text-center py-12 text-muted-foreground">
-                List view coming soon...
-              </div>
+              <ContentList
+                onCardClick={handleCardClick}
+                searchQuery={searchQuery}
+              />
             )}
 
             {viewMode === 'calendar' && (
-              <div className="text-center py-12 text-muted-foreground">
-                Calendar view coming soon...
-              </div>
+              <ContentCalendar
+                onCardClick={handleCardClick}
+                onAddNew={() => setIsCreateOpen(true)}
+                searchQuery={searchQuery}
+              />
             )}
           </div>
         </div>

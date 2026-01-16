@@ -581,6 +581,10 @@ export default contentSlice.reducer;
 
 export const selectContent = (state: { content: ContentState }) => state.content.items;
 export const selectContentByStatus = (state: { content: ContentState }) => state.content.byStatus;
+export const selectAllContent = (state: { content: ContentState }) => {
+  // Flatten all content from byStatus into a single array
+  return Object.values(state.content.byStatus).flat();
+};
 export const selectCurrentContent = (state: { content: ContentState }) => state.content.currentContent;
 export const selectCurrentComments = (state: { content: ContentState }) => state.content.currentComments;
 export const selectContentTypes = (state: { content: ContentState }) => state.content.contentTypes;

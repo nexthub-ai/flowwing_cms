@@ -286,7 +286,7 @@ export function AuditReviewModal({
 
             <TabsContent value="preview">
               <div
-                className="rounded-lg bg-black"
+                className="rounded-lg overflow-hidden"
                 dangerouslySetInnerHTML={{ __html: generateCurrentHTML() }}
               />
             </TabsContent>

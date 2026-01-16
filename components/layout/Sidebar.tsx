@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import Image from 'next/image';
 import {
   LayoutDashboard, FileText, Users, LogOut,
-  PenTool, ClipboardCheck, UsersRound, Moon, Sun
+  PenTool, ClipboardCheck, UsersRound, Moon, Sun, Inbox
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -16,6 +16,7 @@ import { useTheme } from "next-themes";
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Content", href: "/content", icon: FileText, roles: ["admin", "pms"] as const },
+  { label: "Requests", href: "/content/requests", icon: Inbox, roles: ["admin", "pms"] as const },
   { label: "Clients", href: "/clients", icon: Users, roles: ["admin", "pms"] as const },
   { label: "Team", href: "/team", icon: UsersRound, roles: ["admin", "pms"] as const },
   { label: "My Tasks", href: "/my-tasks", icon: PenTool, roles: ["creator"] as const },

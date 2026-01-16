@@ -24,7 +24,7 @@ export function Hero() {
       
       <div className="container relative z-10 py-32">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-[0.6fr_1.8fr_0.6fr] gap-8 items-center">
+          <div className="grid lg:grid-cols-[0.8fr_1.2fr_0.8fr] gap-8 items-center">
             
             {/* Left Image */}
             <div className="relative hidden lg:block">

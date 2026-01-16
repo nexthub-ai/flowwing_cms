@@ -77,15 +77,14 @@ export class AuditReportService {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       line-height: 1.7;
       color: #1e293b;
-      background: #f8fafc;
+      background: white;
       padding: 0;
     }
-    
+
     .report-container {
-      max-width: 900px;
+      width: 100%;
       margin: 0 auto;
       background: white;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
     
     /* Header */
