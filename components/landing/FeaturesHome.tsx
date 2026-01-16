@@ -5,18 +5,18 @@ import { Zap, Rocket, MenuIcon, Menu } from "lucide-react";
 const benefits = [
   {
     icon: Zap,
-    title: "Plan with Simplicity",
-    description: "Sully studies what's working in your niche, masters your brand voice, and delivers ready-to-use ideas, briefs, and scripts."
+    title: "Identify Issues Fast",
+    description: "Get a clear picture of what's blocking your growth and engagement across all platforms."
   },
   {
     icon: Rocket,
-    title: "Create with Speed",
-    description: "Flight Deck works with leading AI content tools to transform your plans into polished posts, with Sully on quality control."
+    title: "Actionable Insights",
+    description: "Receive specific recommendations you can implement immediately to improve performance."
   },
   {
     icon: MenuIcon,
-    title: "Post with Confidence",
-    description: "Review your content drafts, approve with one click, and instantly reach all your audiences across every platform you use."
+    title: "Expert Analysis",
+    description: "Each audit is reviewed by professionals who understand content strategy and audience engagement."
   }
 ];
 
@@ -44,10 +44,10 @@ export function FeaturesHome() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-                Key Benefits
+                Why Get an Audit?
               </h2>
               <p className="text-xl text-muted-foreground">
-                Effortless Social Content from the Flight Deck
+                Discover what's working and what needs to change
               </p>
             </div>
 
@@ -78,8 +78,11 @@ export function FeaturesHome() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-                Core Benefits of Using Flow Wing
+                Coming Soon: Content Creation Tools
               </h2>
+              <p className="text-xl text-muted-foreground">
+                Request a demo to see our AI-powered content platform
+              </p>
             </div>
 
             <div className="space-y-8">

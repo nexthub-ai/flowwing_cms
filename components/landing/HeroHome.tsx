@@ -28,24 +28,25 @@ export function HeroHome() {
           {/* Heading */}
           <div className="space-y-6">
             <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1]">
-              Turn Social Media Turbulence
+              Get Clear Content
               <span className="block mt-2 bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
-                into Smooth Flow
+                Diagnosis
               </span>
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              Let <span className="font-semibold text-foreground">Sully</span>, your AI Wingman, handle content creation, planning, and posting—so your brand shows up consistently, without the complexity.
+              Understand what's blocking growth, what works, and what needs fixing —
+              <span className="text-foreground/90"> with actionable insights delivered in 48 hours.</span>
             </p>
           </div>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Link href="#demo" className="w-full sm:w-auto">
+            <Link href="/audit/start" className="w-full sm:w-auto">
               <Button 
                 size="lg" 
                 className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-8 h-12 text-base font-medium group"
               >
-                Request A Demo
+                Start Your Audit — $100
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
@@ -55,7 +56,7 @@ export function HeroHome() {
                 variant="outline"
                 className="w-full sm:w-auto px-8 h-12 text-base font-medium"
               >
-                Request A Demo
+                See Content Demo
               </Button>
             </Link>
           </div>
