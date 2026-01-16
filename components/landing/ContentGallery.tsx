@@ -117,7 +117,7 @@ export function ContentGallery() {
       
       <div className="container relative z-10 px-6">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm text-white mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm text-primary mb-6">
             <Sparkles className="h-4 w-4" />
             <span>Personal Brand Insights</span>
           </div>

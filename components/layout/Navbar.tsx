@@ -4,14 +4,15 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import Image from 'next/image';
-import { 
-  Zap, LayoutDashboard, FileText, Users, Settings, LogOut, LogIn, 
-  PenTool, Wand2, GitBranch, UserCog, ClipboardCheck 
+import {
+  Zap, LayoutDashboard, FileText, Users, Settings, LogOut, LogIn,
+  PenTool, Wand2, GitBranch, UserCog, ClipboardCheck, Moon, Sun
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectUser, selectRoles, signOut } from "@/store/slices/authSlice";
 import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -30,6 +31,12 @@ export function Navbar({ showAuth = true }: NavbarProps) {
   const user = useAppSelector(selectUser);
   const roles = useAppSelector(selectRoles);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +46,10 @@ export function Navbar({ showAuth = true }: NavbarProps) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
 
   const handleSignOut = async () => {
     await dispatch(signOut());
@@ -99,7 +110,21 @@ export function Navbar({ showAuth = true }: NavbarProps) {
             </div>
           )}
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {/* Theme Toggle */}
+            {mounted && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleTheme}
+                className="h-9 w-9"
+              >
+                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            )}
+
             {!showAuth && (
               <Link href="/audit/start">
                 <Button variant="hero" size="sm">

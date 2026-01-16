@@ -45,7 +45,7 @@ export function Features() {
     <section id="how-it-works" className="relative py-24 border-t border-border/50">
       <div className="container px-6">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm text-white mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm text-primary mb-6">
             <FileText className="h-4 w-4" />
             <span>What's Inside Your Audit</span>
           </div>

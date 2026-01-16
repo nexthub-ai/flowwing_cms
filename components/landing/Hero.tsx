@@ -4,8 +4,19 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, TrendingUp, Target, Star, Users, Shield } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export function Hero() {
+  const { theme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && (theme === 'dark' || resolvedTheme === 'dark');
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Simplified Background */}
@@ -17,9 +28,9 @@ export function Hero() {
             
             {/* Left Image */}
             <div className="relative hidden lg:block">
-              <div className="relative h-[400px] overflow-hidden opacity-40">
+              <div className="relative h-[400px] overflow-hidden">
                 <Image
-                  src="/banner.png"
+                  src={isDark ? "/banner.png" : "/banner1-light.png"}
                   alt="Brand Analysis"
                   fill
                   className="object-cover object-left"
@@ -32,7 +43,7 @@ export function Hero() {
             {/* Center Column - Content */}
             <div className="space-y-8 text-center">
               {/* Badge - More Subtle */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-xs font-medium text-white">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary">
                 <Shield className="h-3 w-3" />
                 <span>Professional Brand Audit</span>
               </div>
@@ -93,9 +104,9 @@ export function Hero() {
 
             {/* Right Image */}
             <div className="relative hidden lg:block">
-              <div className="relative h-[400px] overflow-hidden opacity-40">
+              <div className="relative h-[400px] overflow-hidden">
                 <Image
-                  src="/heroImage2.jpg"
+                  src={isDark ? "/heroImage2.jpg" : "/banner2-light.png"}
                   alt="Brand Analysis"
                   fill
                   className="object-cover object-right"
